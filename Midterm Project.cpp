@@ -43,6 +43,53 @@ class Shop{
 		double getPrice(){
 			return price;
 		}
+		
+		void updateItem(){
+			
+			int qty;
+			double newprice;
+			string update;
+			
+			cout << "\n(Quantity or Price)" << endl;
+		    cout << "What would you like to update for this item?: ";
+	        cin >> update;
+		            
+		   	    if(update == "quantity"){
+		           	cout << "Please input the new amount of qty: ";
+		           	cin >> qty;
+		           	cout<<"Quantity of Item " << name << " is updated from "<< quantity << " to " << qty <<endl;
+					quantity = qty;
+				}
+				else if(update == "price"){
+		           	cout << "Please input the new price: ";
+		           	cin >> newprice;
+					cout<<"Quantity of Item " << name << " is updated from "<< price << " to " << newprice <<endl;
+					price = newprice;
+					}
+			
+		}
+//		void deleteItem(){
+//			name.clear();
+//			quantity.clear();
+//			price.clear();
+//			ID.clear();
+//		}	        
+
+//		IN PROGRESS
+//	    static void sortItems(vector<Shop*>& shops, const string& sort) {
+//	        
+//            if (sort == "quantity") {
+//                // Sort by quantity
+//                sort(shops.begin(), shops.end(), [](Shop* a, Shop* b) {
+//                    return a->getQuantity() < b->getQuantity();
+//                });
+//            } else if (sort == "price") {
+//                // Sort by price
+//                sort(shops.begin(), shops.end(), [](Shop* a, Shop* b) {
+//                    return a->getPrice() < b->getPrice();
+//                });
+//            }
+//        }
 	
 	};
 		
@@ -56,11 +103,11 @@ class Clothing : public Shop{
 				
 			string inputName;	
 			cout<<"\nPlease Input Name: ";
-			cin>>inputName; setName(inputName);
+			getline(cin, inputName); setName(inputName);
 			
 			string inputID;
 			cout<<"\nPlease Input ID: ";
-			cin>>inputID; setID(inputID);
+			getline(cin, inputID); setID(inputID);
 			
 			int inputQuantity;
 			cout<<"\nPlease Input Quantity: ";
@@ -129,10 +176,12 @@ class Entertainment : public Shop{
 			string inputName;	
 			cout<<"\nPlease Input Name: ";
 			cin>>inputName; setName(inputName);
+			cin.ignore();
 			
 			string inputID;
 			cout<<"\nPlease Input ID: ";
 			cin>>inputID; setID(inputID);
+			cin.ignore();
 			
 			int inputQuantity;
 			cout<<"\nPlease Input Quantity: ";
@@ -152,14 +201,17 @@ class Entertainment : public Shop{
 					cout << left << setw(15) << setfill(' ') << getPrice();
 					cout << left << setw(15) << setfill(' ') << "Entertainment" << endl;
                 }
-		};			
+		};	
+		
+		
+				
 
 void Menu(){
 			
 	vector<Shop*> shops;					
 	bool entry = true;	
 	int choice;
-	string category, categoryChoice;
+	string category, categoryChoice, key;
 	
 	while(entry == true){
 	
@@ -184,6 +236,7 @@ void Menu(){
 		case 1:
 			cout<<"\nPlease input category (Clothing, Electronics,  Entertainment): ";
 			cin>>categoryChoice;
+			cin.ignore();
 			transform(categoryChoice.begin(), categoryChoice.end(), categoryChoice.begin(), ::tolower);
 			
 				if(categoryChoice == "clothing"){
@@ -206,10 +259,24 @@ void Menu(){
 				}
 			break;
 		case 2:
+			cout << "Enter the ID to search: ";
+		    cin >> key;
 			
+		    for (auto& shop : shops) {
+		        if (shop->getID() == key) { 
+					shop->updateItem();
+		        }
+		    }
 			break;
 		case 3:
+			cout << "Enter the ID to search: ";
+		    cin >> key;
 			
+		    for (auto& shop : shops) {
+		        if (shop->getID() == key) { 
+//					shop->deleteItem();
+		        }
+		    }
 			break;
 		case 4:
 
@@ -254,14 +321,31 @@ void Menu(){
 			}
 			break;
 		case 6:
-//			for(auto& shop : shops){
-//				if(binary_search(shop.(start), shop.(end), key){
-//				shop->display();
-//			}
-//			}
+		    cout << "Enter the ID to search: ";
+		    cin >> key;
+
+		    for (auto& shop : shops) {
+		        if (shop->getID() == key) { 
+					cout << "\nDisplaying requested item:" << endl;
+					cout << left << setw(15) << setfill(' ') << "ID";
+					cout << left << setw(15) << setfill(' ') << "Name";
+					cout << left << setw(15) << setfill(' ') << "Quantity";
+					cout << left << setw(15) << setfill(' ') << "Price";
+					cout << left << setw(15) << setfill(' ') << "Category"<<endl;
+		            shop->display();
+		        }
+		        else if (shop->getID() != key){
+		    	cout<<"Item not found!, going back to menu..."<<endl;
+			}
+		    }
 			break;
 		case 7:
-			
+			// IN PROGRESS
+//			string sortCriteria;
+//            cout << "\nSort by (quantity or price): ";
+//       		cin >> sortCriteria;
+//            Shop::sortItems(shops, sortCriteria);  // Call static method
+//            cout << "\nItems sorted successfully by " << sortCriteria << "!" << endl;
 			break;
 		case 8:
 			
@@ -280,7 +364,7 @@ void Menu(){
 	}
 }
 
-int main(){	
+int main(){
 		
 	Menu();
 	
