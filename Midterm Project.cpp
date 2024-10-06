@@ -75,21 +75,66 @@ class Shop{
 //			ID.clear();
 //		}	        
 
-//		IN PROGRESS
-//	    static void sortItems(vector<Shop*>& shops, const string& sort) {
-//	        
-//            if (sort == "quantity") {
-//                // Sort by quantity
-//                sort(shops.begin(), shops.end(), [](Shop* a, Shop* b) {
-//                    return a->getQuantity() < b->getQuantity();
-//                });
-//            } else if (sort == "price") {
-//                // Sort by price
-//                sort(shops.begin(), shops.end(), [](Shop* a, Shop* b) {
-//                    return a->getPrice() < b->getPrice();
-//                });
-//            }
-//        }
+		static void sortItems(vector<Shop*>& shops, const string& sortCriteria) {
+		    int n = shops.size();
+		    
+		    string sortMethod;
+	        cout<<"Ascending ot Descending: ";
+	        cin>>sortMethod;
+	        
+	        if(sortMethod == "ascending"){
+			    if (sortCriteria == "quantity") {
+			        for (int i = 0; i < n - 1; i++) {
+			            for (int j = 0; j < n - i - 1; j++) {
+			                if (shops[j]->getQuantity() > shops[j + 1]->getQuantity()) {
+
+			                    Shop* temp = shops[j];
+			                    shops[j] = shops[j + 1];
+			                    shops[j + 1] = temp;
+			                }
+			            }
+			        }
+			    } else if (sortCriteria == "price") {
+			        for (int i = 0; i < n - 1; i++) {
+			            for (int j = 0; j < n - i - 1; j++) {
+			                if (shops[j]->getPrice() > shops[j + 1]->getPrice()) {
+
+			                    Shop* temp = shops[j];
+			                    shops[j] = shops[j + 1];
+			                    shops[j + 1] = temp;
+			                }
+			            }
+			        }
+			    }
+			}
+			else if(sortMethod == "descending"){
+				if (sortCriteria == "quantity") {
+		
+			        for (int i = 0; i < n - 1; i++) {
+			            for (int j = 0; j < n - i - 1; j++) {
+			                if (shops[j]->getQuantity() < shops[j + 1]->getQuantity()) {
+			            
+			                    Shop* temp = shops[j];
+			                    shops[j] = shops[j + 1];
+			                    shops[j + 1] = temp;
+			                }
+			            }
+			        }
+			    } else if (sortCriteria == "price") {
+	
+			        for (int i = 0; i < n - 1; i++) {
+			            for (int j = 0; j < n - i - 1; j++) {
+			                if (shops[j]->getPrice() < shops[j + 1]->getPrice()) {
+			       
+			                    Shop* temp = shops[j];
+			                    shops[j] = shops[j + 1];
+			                    shops[j + 1] = temp;
+			                }
+			            }
+			        }
+			    }
+			}
+		}
 	
 	};
 		
@@ -203,11 +248,18 @@ class Entertainment : public Shop{
                 }
 		};	
 		
-		
+void tabs(){
+			cout << left << setw(15) << setfill(' ') << "ID";
+			cout << left << setw(15) << setfill(' ') << "Name";
+			cout << left << setw(15) << setfill(' ') << "Quantity";
+			cout << left << setw(15) << setfill(' ') << "Price";
+			cout << left << setw(15) << setfill(' ') << "Category";
+			cout<<"\n";
+		}		
 				
 
 void Menu(){
-			
+	
 	vector<Shop*> shops;					
 	bool entry = true;	
 	int choice;
@@ -259,7 +311,7 @@ void Menu(){
 				}
 			break;
 		case 2:
-			cout << "Enter the ID to search: ";
+			cout << "Enter the ID to update: ";
 		    cin >> key;
 			
 		    for (auto& shop : shops) {
@@ -269,7 +321,7 @@ void Menu(){
 		    }
 			break;
 		case 3:
-			cout << "Enter the ID to search: ";
+			cout << "Enter the ID to remove: ";
 		    cin >> key;
 			
 		    for (auto& shop : shops) {
@@ -286,11 +338,7 @@ void Menu(){
 			transform(categoryChoice.begin(), categoryChoice.end(), categoryChoice.begin(), ::tolower);
 			
 			cout << "\nDisplaying all items in category:" << endl;
-			cout << left << setw(15) << setfill(' ') << "ID";
-			cout << left << setw(15) << setfill(' ') << "Name";
-			cout << left << setw(15) << setfill(' ') << "Quantity";
-			cout << left << setw(15) << setfill(' ') << "Price";
-			cout << left << setw(15) << setfill(' ') << "Category";
+			tabs();
 			cout<<"\n";
 			
 			for(auto& shop : shops){
@@ -310,11 +358,7 @@ void Menu(){
 			break;
 		case 5:
 			cout << "\nDisplaying all items:" << endl;
-			cout << left << setw(15) << setfill(' ') << "ID";
-			cout << left << setw(15) << setfill(' ') << "Name";
-			cout << left << setw(15) << setfill(' ') << "Quantity";
-			cout << left << setw(15) << setfill(' ') << "Price";
-			cout << left << setw(15) << setfill(' ') << "Category";
+			tabs();
 			cout<<"\n";
 			for(auto& shop : shops){
 			    shop->display();
@@ -327,11 +371,7 @@ void Menu(){
 		    for (auto& shop : shops) {
 		        if (shop->getID() == key) { 
 					cout << "\nDisplaying requested item:" << endl;
-					cout << left << setw(15) << setfill(' ') << "ID";
-					cout << left << setw(15) << setfill(' ') << "Name";
-					cout << left << setw(15) << setfill(' ') << "Quantity";
-					cout << left << setw(15) << setfill(' ') << "Price";
-					cout << left << setw(15) << setfill(' ') << "Category"<<endl;
+					tabs();
 		            shop->display();
 		        }
 		        else if (shop->getID() != key){
@@ -339,24 +379,35 @@ void Menu(){
 			}
 		    }
 			break;
-		case 7:
-			// IN PROGRESS
-//			string sortCriteria;
-//            cout << "\nSort by (quantity or price): ";
-//       		cin >> sortCriteria;
-//            Shop::sortItems(shops, sortCriteria);  // Call static method
-//            cout << "\nItems sorted successfully by " << sortCriteria << "!" << endl;
-			break;
-		case 8:
+		case 7:{
 			
+			string sortCriteria;
+            cout << "\nSort by (quantity or price): ";
+       		cin >> sortCriteria;
+            Shop::sortItems(shops, sortCriteria);
+            cout << "\nItems sorted successfully by " << sortCriteria << "!" << endl;
+			cout << "\nDisplaying sorted items:" << endl;
+			tabs();
+			for(auto& shop : shops){
+			    shop->display();
+			}	
+			break;		
+		}
+		case 8:
+			cout<<"\nDisplaying Low Stock Items: "<<endl;
+			tabs();
+			for(auto& shop : shops){
+				if(shop->getQuantity() <= 5){
+					shop->display();
+				}
+			}
 			break;
 		case 9:
 			cout<<"Terminating program...";
 			entry = false;
 			break;	
 		default:
-			cout<<"\nInvalid Input. Please try again."<<endl;	
-		
+			cout<<"\nInvalid Input. Please try again."<<endl;			
 		}
 	}
 	for(auto& shop : shops){
