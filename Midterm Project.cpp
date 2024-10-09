@@ -1,5 +1,4 @@
 #include <iostream>
-#include <algorithm>
 #include <windows.h>
 #include <vector>
 #include <iomanip>
@@ -53,6 +52,9 @@ class Shop{
 			cout << "\n(Quantity or Price)" << endl;
 		    cout << "What would you like to update for this item?: ";
 	        cin >> update;
+	        for (char& c : update) {
+			    c = tolower(c);
+			}
 		            
 		   	    if(update == "quantity"){
 		           	cout << "Please input the new amount of qty: ";
@@ -68,19 +70,15 @@ class Shop{
 					}
 			
 		}
-//		void deleteItem(){
-//			name.clear();
-//			quantity.clear();
-//			price.clear();
-//			ID.clear();
-//		}	        
-
 		static void sortItems(vector<Shop*>& shops, const string& sortCriteria) {
 		    int n = shops.size();
 		    
 		    string sortMethod;
 	        cout<<"Ascending ot Descending: ";
 	        cin>>sortMethod;
+	        for (char& c : sortMethod) {
+			    c = tolower(c);
+			}
 	        
 	        if(sortMethod == "ascending"){
 			    if (sortCriteria == "quantity") {
@@ -152,7 +150,11 @@ class Clothing : public Shop{
 			
 			string inputID;
 			cout<<"\nPlease Input ID: ";
-			getline(cin, inputID); setID(inputID);
+			getline(cin, inputID);
+			for (char& c : inputID) {
+			    c = toupper(c);
+			}
+			setID(inputID);
 			
 			int inputQuantity;
 			cout<<"\nPlease Input Quantity: ";
@@ -166,7 +168,7 @@ class Clothing : public Shop{
 		
 		void display() override{
 		
-					cout << left << setw(15) << setfill(' ') << getID();     //ONLY FOR CLOTHING
+					cout << left << setw(15) << setfill(' ') << getID();
 					cout << left << setw(15) << setfill(' ') << getName();
 					cout << left << setw(15) << setfill(' ') << getQuantity();
 					cout << left << setw(15) << setfill(' ') << getPrice();
@@ -184,11 +186,15 @@ class Electronics : public Shop{
 				
 			string inputName;	
 			cout<<"\nPlease Input Name: ";
-			cin>>inputName; setName(inputName);
+			getline(cin, inputName); setName(inputName);
 			
 			string inputID;
 			cout<<"\nPlease Input ID: ";
-			cin>>inputID; setID(inputID);
+			getline(cin, inputID);
+			for (char& c : inputID) {
+			    c = toupper(c);
+			}
+			setID(inputID);
 			
 			int inputQuantity;
 			cout<<"\nPlease Input Quantity: ";
@@ -200,9 +206,8 @@ class Electronics : public Shop{
 		
 		}
 		
-		void display() override{
-		
-					cout << left << setw(15) << setfill(' ') << getID();     //ONLY FOR ELECTRONIC
+		void display() override{		
+					cout << left << setw(15) << setfill(' ') << getID();
 					cout << left << setw(15) << setfill(' ') << getName();
 					cout << left << setw(15) << setfill(' ') << getQuantity();
 					cout << left << setw(15) << setfill(' ') << getPrice();
@@ -220,13 +225,15 @@ class Entertainment : public Shop{
 				
 			string inputName;	
 			cout<<"\nPlease Input Name: ";
-			cin>>inputName; setName(inputName);
-			cin.ignore();
+			getline(cin, inputName); setName(inputName);
 			
 			string inputID;
 			cout<<"\nPlease Input ID: ";
-			cin>>inputID; setID(inputID);
-			cin.ignore();
+			getline(cin, inputID);
+			for (char& c : inputID) {
+			    c = toupper(c);
+			}
+			setID(inputID);
 			
 			int inputQuantity;
 			cout<<"\nPlease Input Quantity: ";
@@ -240,7 +247,7 @@ class Entertainment : public Shop{
 		
 		void display() override{
 		
-					cout << left << setw(15) << setfill(' ') << getID();     //ONLY FOR Entertainment
+					cout << left << setw(15) << setfill(' ') << getID();   
 					cout << left << setw(15) << setfill(' ') << getName();
 					cout << left << setw(15) << setfill(' ') << getQuantity();
 					cout << left << setw(15) << setfill(' ') << getPrice();
@@ -253,11 +260,9 @@ void tabs(){
 			cout << left << setw(15) << setfill(' ') << "Name";
 			cout << left << setw(15) << setfill(' ') << "Quantity";
 			cout << left << setw(15) << setfill(' ') << "Price";
-			cout << left << setw(15) << setfill(' ') << "Category";
-			cout<<"\n";
+			cout << left << setw(15) << setfill(' ') << "Category"<<endl;
 		}		
 				
-
 void Menu(){
 	
 	vector<Shop*> shops;					
@@ -289,7 +294,9 @@ void Menu(){
 			cout<<"\nPlease input category (Clothing, Electronics,  Entertainment): ";
 			cin>>categoryChoice;
 			cin.ignore();
-			transform(categoryChoice.begin(), categoryChoice.end(), categoryChoice.begin(), ::tolower);
+			for (char& c : categoryChoice) {
+			    c = tolower(c);
+			}
 			
 				if(categoryChoice == "clothing"){
 					Shop* cloth = new Clothing(0,0," ", " ");
@@ -310,95 +317,151 @@ void Menu(){
 					cout<<"\nEntertainment added successfully!"<<endl;
 				}
 			break;
-		case 2:
-			cout << "Enter the ID to update: ";
-		    cin >> key;
-			
-		    for (auto& shop : shops) {
-		        if (shop->getID() == key) { 
-					shop->updateItem();
-		        }
-		    }
+		case 2:{
+			if (shops.empty()) {
+			    cout << "There is no item available yet." << endl;
+			}
+			else {
+				cout << "Enter the ID to update: ";
+			    cin >> key;
+				
+				bool itemFound = false;
+			    for (auto& shop : shops) {
+			        if (shop->getID() == key) { 
+						shop->updateItem();
+			        }
+			    }
+			    if(!itemFound){
+			    	cout<<"Item not found! (Please check if ID is correct)"<<endl;
+				}
+			}
 			break;
-		case 3:
-			cout << "Enter the ID to remove: ";
-		    cin >> key;
-			
-		    for (auto& shop : shops) {
-		        if (shop->getID() == key) { 
-//					shop->deleteItem();
-		        }
-		    }
-			break;
+		}
+		case 3:{
+			if (shops.empty()) {
+			    cout << "There is no item available yet." << endl;
+			}
+			else {
+			    cout << "Enter the ID to remove: ";
+			    cin >> key;
+			    for (char& c : key) {
+				    c = toupper(c);
+				}
+			    
+			    bool itemFound = false;
+			    for (auto it = shops.begin(); it != shops.end(); ++it) {
+			        if ((*it)->getID() == key) {
+			            delete *it;
+			            shops.erase(it);
+			            cout << "Item removed successfully!" << endl;
+			            itemFound = true;
+			            break;
+			        }
+			    }	    
+			    if (!itemFound) {
+			        cout << "Item not found! (Please check if ID is correct)" << endl;
+			    }
+			}
+		    break;
+		}
 		case 4:
-
-			cout<<"\n(Clothing, Electronics,  Entertainment)";
-			cout << "\nPlease input what category you would like to see: ";
-			cin>>categoryChoice;
-			transform(categoryChoice.begin(), categoryChoice.end(), categoryChoice.begin(), ::tolower);
-			
-			cout << "\nDisplaying all items in category:" << endl;
-			tabs();
-			cout<<"\n";
-			
-			for(auto& shop : shops){
-			    if(categoryChoice == "clothing"){
-			        Clothing* cloth = dynamic_cast<Clothing*>(shop);
-			        if(cloth) cloth->display();
-			    }
-			    else if(categoryChoice == "electronics"){
-			        Electronics* electronic = dynamic_cast<Electronics*>(shop);
-			        if(electronic) electronic->display();
-			    }
-			    else if(categoryChoice == "entertainment"){
-			        Entertainment* entertainment = dynamic_cast<Entertainment*>(shop);
-			        if(entertainment) entertainment->display();
+			if (shops.empty()) {
+			    cout << "There is no item available yet." << endl;
+			}
+			else {
+				cout<<"\n(Clothing, Electronics,  Entertainment)";
+				cout << "\nPlease input what category you would like to see: ";
+				cin>>categoryChoice;
+				for (char& c : categoryChoice) {
+				    c = tolower(c);
+				}
+				
+				cout << "\nDisplaying all items in category:" << endl;
+				tabs();
+				
+				for(auto& shop : shops){
+				    if(categoryChoice == "clothing"){
+				        Clothing* cloth = dynamic_cast<Clothing*>(shop);
+				        if(cloth) cloth->display();
+				    }
+				    else if(categoryChoice == "electronics"){
+				        Electronics* electronic = dynamic_cast<Electronics*>(shop);
+				        if(electronic) electronic->display();
+				    }
+				    else if(categoryChoice == "entertainment"){
+				        Entertainment* entertainment = dynamic_cast<Entertainment*>(shop);
+				        if(entertainment) entertainment->display();
+					}
 				}
 			}
 			break;
 		case 5:
-			cout << "\nDisplaying all items:" << endl;
-			tabs();
-			cout<<"\n";
-			for(auto& shop : shops){
-			    shop->display();
+			if (shops.empty()) {
+			    cout << "There is no item available yet." << endl;
+			}
+			else {
+				cout << "\nDisplaying all items:" << endl;
+				tabs();
+			    for (auto& shop : shops) {
+			        shop->display();
+			    }
 			}
 			break;
-		case 6:
-		    cout << "Enter the ID to search: ";
-		    cin >> key;
-
-		    for (auto& shop : shops) {
-		        if (shop->getID() == key) { 
-					cout << "\nDisplaying requested item:" << endl;
-					tabs();
-		            shop->display();
-		        }
-		        else if (shop->getID() != key){
-		    	cout<<"Item not found!, going back to menu..."<<endl;
+		case 6:{
+			if (shops.empty()) {
+			    cout << "There is no item available yet." << endl;
 			}
-		    }
+			else {
+			    cout << "Enter the ID to search: ";
+			    cin >> key;
+			    for (char& c : key) {
+				    c = toupper(c);
+				}
+	
+			    bool itemFound = false;
+			    for (auto& shop : shops) {
+			        if (shop->getID() == key) { 
+						cout << "\nDisplaying requested item:" << endl;
+						tabs();
+			            shop->display();
+			            itemFound = true;
+			        }
+			    }
+			    if (!itemFound){
+			    	cout<<"Item not found! (Please check if ID is correct)"<<endl;
+				}
+			}
 			break;
+		}
 		case 7:{
-			
-			string sortCriteria;
-            cout << "\nSort by (quantity or price): ";
-       		cin >> sortCriteria;
-            Shop::sortItems(shops, sortCriteria);
-            cout << "\nItems sorted successfully by " << sortCriteria << "!" << endl;
-			cout << "\nDisplaying sorted items:" << endl;
-			tabs();
-			for(auto& shop : shops){
-			    shop->display();
-			}	
+			if (shops.empty()) {
+			    cout << "There is no item available yet." << endl;
+			}
+			else {
+				string sortCriteria;
+	            cout << "\nSort by (quantity or price): ";
+	       		cin >> sortCriteria;
+	            Shop::sortItems(shops, sortCriteria);
+	            cout << "\nItems sorted successfully by " << sortCriteria << "!" << endl;
+				cout << "\nDisplaying sorted items:" << endl;
+				tabs();
+				 for (auto& shop : shops) {
+					shop->display();
+				 }
+			}
 			break;		
 		}
 		case 8:
-			cout<<"\nDisplaying Low Stock Items: "<<endl;
-			tabs();
-			for(auto& shop : shops){
-				if(shop->getQuantity() <= 5){
-					shop->display();
+			if (shops.empty()) {
+			    cout << "There is no item available yet." << endl;
+			}
+			else {
+				cout<<"\nDisplaying Low Stock Items: "<<endl;
+				tabs();
+				for(auto& shop : shops){
+					if(shop->getQuantity() <= 5){
+						shop->display();
+					}
 				}
 			}
 			break;
