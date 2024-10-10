@@ -55,16 +55,18 @@ class Shop{
 	        for (char& c : update) {
 			    c = tolower(c);
 			}
-		            
+		        system("CLS");    
 		   	    if(update == "quantity"){
 		           	cout << "Please input the new amount of qty: ";
 		           	cin >> qty;
+		           	cin.ignore();
 		           	cout<<"Quantity of Item " << name << " is updated from "<< quantity << " to " << qty <<endl;
 					quantity = qty;
 				}
 				else if(update == "price"){
 		           	cout << "Please input the new price: ";
 		           	cin >> newprice;
+		           	cin.ignore();
 					cout<<"Quantity of Item " << name << " is updated from "<< price << " to " << newprice <<endl;
 					price = newprice;
 					}
@@ -72,68 +74,75 @@ class Shop{
 		}
 		static void sortItems(vector<Shop*>& shops, const string& sortCriteria) {
 		    int n = shops.size();
-		    
+		    bool entry = false;
 		    string sortMethod;
-	        cout<<"Ascending ot Descending: ";
-	        cin>>sortMethod;
-	        for (char& c : sortMethod) {
-			    c = tolower(c);
-			}
-	        
-	        if(sortMethod == "ascending"){
-			    if (sortCriteria == "quantity") {
-			        for (int i = 0; i < n - 1; i++) {
-			            for (int j = 0; j < n - i - 1; j++) {
-			                if (shops[j]->getQuantity() > shops[j + 1]->getQuantity()) {
-
-			                    Shop* temp = shops[j];
-			                    shops[j] = shops[j + 1];
-			                    shops[j + 1] = temp;
-			                }
-			            }
-			        }
-			    } else if (sortCriteria == "price") {
-			        for (int i = 0; i < n - 1; i++) {
-			            for (int j = 0; j < n - i - 1; j++) {
-			                if (shops[j]->getPrice() > shops[j + 1]->getPrice()) {
-
-			                    Shop* temp = shops[j];
-			                    shops[j] = shops[j + 1];
-			                    shops[j + 1] = temp;
-			                }
-			            }
-			        }
-			    }
-			}
-			else if(sortMethod == "descending"){
-				if (sortCriteria == "quantity") {
-		
-			        for (int i = 0; i < n - 1; i++) {
-			            for (int j = 0; j < n - i - 1; j++) {
-			                if (shops[j]->getQuantity() < shops[j + 1]->getQuantity()) {
-			            
-			                    Shop* temp = shops[j];
-			                    shops[j] = shops[j + 1];
-			                    shops[j + 1] = temp;
-			                }
-			            }
-			        }
-			    } else if (sortCriteria == "price") {
+		    
+		    while(!entry){
+		        cout<<"Ascending ot Descending: ";
+		        cin>>sortMethod;
+		        for (char& c : sortMethod) {
+					    c = tolower(c);
+					}  	
+		        if(sortMethod == "ascending"){
+				    if (sortCriteria == "quantity") {
+				        for (int i = 0; i < n - 1; i++) {
+				            for (int j = 0; j < n - i - 1; j++) {
+				                if (shops[j]->getQuantity() > shops[j + 1]->getQuantity()) {
 	
-			        for (int i = 0; i < n - 1; i++) {
-			            for (int j = 0; j < n - i - 1; j++) {
-			                if (shops[j]->getPrice() < shops[j + 1]->getPrice()) {
-			       
-			                    Shop* temp = shops[j];
-			                    shops[j] = shops[j + 1];
-			                    shops[j + 1] = temp;
-			                }
-			            }
-			        }
-			    }
+				                    Shop* temp = shops[j];
+				                    shops[j] = shops[j + 1];
+				                    shops[j + 1] = temp;
+				                }
+				            }
+				        }
+				    } else if (sortCriteria == "price") {
+				        for (int i = 0; i < n - 1; i++) {
+				            for (int j = 0; j < n - i - 1; j++) {
+				                if (shops[j]->getPrice() > shops[j + 1]->getPrice()) {
+	
+				                    Shop* temp = shops[j];
+				                    shops[j] = shops[j + 1];
+				                    shops[j + 1] = temp;
+				                }
+				            }
+				        }
+				    }
+				    entry = true;
+				}
+				else if(sortMethod == "descending"){
+					if (sortCriteria == "quantity") {
+			
+				        for (int i = 0; i < n - 1; i++) {
+				            for (int j = 0; j < n - i - 1; j++) {
+				                if (shops[j]->getQuantity() < shops[j + 1]->getQuantity()) {
+				            
+				                    Shop* temp = shops[j];
+				                    shops[j] = shops[j + 1];
+				                    shops[j + 1] = temp;
+				                }
+				            }
+				        }
+				    } else if (sortCriteria == "price") {
+		
+				        for (int i = 0; i < n - 1; i++) {
+				            for (int j = 0; j < n - i - 1; j++) {
+				                if (shops[j]->getPrice() < shops[j + 1]->getPrice()) {
+				       
+				                    Shop* temp = shops[j];
+				                    shops[j] = shops[j + 1];
+				                    shops[j + 1] = temp;
+				                }
+				            }
+				        }
+				    }
+				    entry = true;
+				}
+				else {
+					cout<<"\nError. Please try again."<<endl;
+					entry = false;
+				}
 			}
 		}
-	
 	};
 		
 class Clothing : public Shop{
@@ -146,24 +155,26 @@ class Clothing : public Shop{
 				
 			string inputName;	
 			cout<<"\nPlease Input Name: ";
-			getline(cin, inputName); setName(inputName);
+			getline(cin, inputName);
 			
 			string inputID;
 			cout<<"\nPlease Input ID: ";
 			getline(cin, inputID);
 			for (char& c : inputID) {
 			    c = toupper(c);
-			}
-			setID(inputID);
-			
+			}	
+						
 			int inputQuantity;
 			cout<<"\nPlease Input Quantity: ";
-			cin>>inputQuantity; setQuantity(inputQuantity);
+			cin>>inputQuantity; cin.ignore();
 			
 			double inputPrice;
 			cout<<"\nPlease Input Price: ";
-			cin>>inputPrice; setPrice(inputPrice);
-		
+			cin>>inputPrice; cin.ignore();
+
+			setName(inputName); setID(inputID); setQuantity(inputQuantity); setPrice(inputPrice);
+			
+			cout<<"\nClothing added successfully!"<<endl;		
 		}
 		
 		void display() override{
@@ -186,7 +197,7 @@ class Electronics : public Shop{
 				
 			string inputName;	
 			cout<<"\nPlease Input Name: ";
-			getline(cin, inputName); setName(inputName);
+			getline(cin, inputName);
 			
 			string inputID;
 			cout<<"\nPlease Input ID: ";
@@ -194,16 +205,18 @@ class Electronics : public Shop{
 			for (char& c : inputID) {
 			    c = toupper(c);
 			}
-			setID(inputID);
 			
 			int inputQuantity;
 			cout<<"\nPlease Input Quantity: ";
-			cin>>inputQuantity; setQuantity(inputQuantity);
+			cin>>inputQuantity; cin.ignore();
 			
 			double inputPrice;
 			cout<<"\nPlease Input Price: ";
-			cin>>inputPrice; setPrice(inputPrice);
-		
+			cin>>inputPrice; cin.ignore();
+			
+			setName(inputName); setID(inputID); setQuantity(inputQuantity); setPrice(inputPrice);
+
+			cout<<"\nElecronic added successfully!"<<endl;		
 		}
 		
 		void display() override{		
@@ -225,7 +238,7 @@ class Entertainment : public Shop{
 				
 			string inputName;	
 			cout<<"\nPlease Input Name: ";
-			getline(cin, inputName); setName(inputName);
+			getline(cin, inputName);
 			
 			string inputID;
 			cout<<"\nPlease Input ID: ";
@@ -233,16 +246,18 @@ class Entertainment : public Shop{
 			for (char& c : inputID) {
 			    c = toupper(c);
 			}
-			setID(inputID);
 			
 			int inputQuantity;
 			cout<<"\nPlease Input Quantity: ";
-			cin>>inputQuantity; setQuantity(inputQuantity);
+			cin>>inputQuantity; cin.ignore();
 			
 			double inputPrice;
 			cout<<"\nPlease Input Price: ";
-			cin>>inputPrice; setPrice(inputPrice);
-		
+			cin>>inputPrice; cin.ignore();
+			
+			setName(inputName); setID(inputID); setQuantity(inputQuantity); setPrice(inputPrice);
+			
+			cout<<"\nEntertainment added successfully!"<<endl;
 		}
 		
 		void display() override{
@@ -267,6 +282,7 @@ void Menu(){
 	
 	vector<Shop*> shops;					
 	bool entry = true;	
+	
 	int choice;
 	string category, categoryChoice, key;
 	
@@ -298,23 +314,23 @@ void Menu(){
 			    c = tolower(c);
 			}
 			
-				if(categoryChoice == "clothing"){
+				if(categoryChoice == "clothing" || categoryChoice == "clothings"){
 					Shop* cloth = new Clothing(0,0," ", " ");
 					cloth->addItem();
 					shops.push_back(cloth);
-					cout<<"\nClothing added successfully!"<<endl;
 				}
-				else if(categoryChoice == "electronics"){
+				else if(categoryChoice == "electronics" || categoryChoice == "electronic"){
 					Shop* electronic = new Electronics(0,0," ", " ");
 					electronic->addItem();
 					shops.push_back(electronic);
-					cout<<"\nElecronic added successfully!"<<endl;
 				}
 				else if(categoryChoice == "entertainment"){
 					Shop* entertainment = new Entertainment(0,0," ", " ");
 					entertainment->addItem();
 					shops.push_back(entertainment);
-					cout<<"\nEntertainment added successfully!"<<endl;
+				}
+				else{
+					cout<<"\nCategory "<<categoryChoice<<" does not exist!"<<endl;
 				}
 			break;
 		case 2:{
@@ -322,18 +338,38 @@ void Menu(){
 			    cout << "There is no item available yet." << endl;
 			}
 			else {
-				cout << "Enter the ID to update: ";
-			    cin >> key;
-				
-				bool itemFound = false;
-			    for (auto& shop : shops) {
-			        if (shop->getID() == key) { 
-						shop->updateItem();
-			        }
-			    }
-			    if(!itemFound){
-			    	cout<<"Item not found! (Please check if ID is correct)"<<endl;
+					cout << "Enter the ID to update: ";
+				    cin >> key;
+					for (char& c : key) {
+					    c = toupper(c);
+					}			
+					bool itemFound = false;
+					bool entry = false;
+					char ans;
+				while(!entry){
+					
+				    for (auto& shop : shops) {
+				        if (shop->getID() == key) {
+				        	cout<<"Item to be updated: "<<endl;
+							tabs();
+							shop->display();
+				        	cout<<"\nIs this the correct item? (Y/N): ";
+				        	cin>>ans;
+				        	cin.ignore();
+				        	if(ans == 'y' || ans == 'Y'){
+								shop->updateItem();
+						    	itemFound = true;
+						    	entry = true;
+						    	break;
+							}
+						else if(ans == 'n' || ans == 'N'){
+							continue;
+						}
+					}
 				}
+				    if(!itemFound){
+				    	cout<<"Item not found! (Please check if ID is correct)"<<endl;
+					}
 			}
 			break;
 		}
@@ -346,18 +382,35 @@ void Menu(){
 			    cin >> key;
 			    for (char& c : key) {
 				    c = toupper(c);
-				}
-			    
+				}		    
 			    bool itemFound = false;
+			    bool entry = false;
+				char ans;
+			while(!entry){
 			    for (auto it = shops.begin(); it != shops.end(); ++it) {
 			        if ((*it)->getID() == key) {
-			            delete *it;
-			            shops.erase(it);
-			            cout << "Item removed successfully!" << endl;
-			            itemFound = true;
-			            break;
+			        	
+			        	cout<<"Item to be updated: "<<endl;
+						tabs();
+						(*it)->display();
+				       	cout<<"\nIs this the correct item? (Y/N): ";
+				       	cin>>ans;
+				       	cin.ignore();
+				       	
+				       	if(ans == 'y' || ans == 'Y'){
+				        	cout<<"Item "<<(*it)->getName()<<" has been removed from the inventory!"<<endl;
+				            delete *it;
+				            shops.erase(it);
+				            itemFound = true;
+				            entry = true;
+				            break;
+				        }
+				        else if(ans == 'n' || ans == 'N'){
+							continue;
+						}
 			        }
-			    }	    
+			    }	
+			}
 			    if (!itemFound) {
 			        cout << "Item not found! (Please check if ID is correct)" << endl;
 			    }
@@ -419,14 +472,28 @@ void Menu(){
 				}
 	
 			    bool itemFound = false;
+			    bool entry = false;
+				char ans;
+			while(!entry){
 			    for (auto& shop : shops) {
 			        if (shop->getID() == key) { 
 						cout << "\nDisplaying requested item:" << endl;
 						tabs();
 			            shop->display();
-			            itemFound = true;
-			        }
+			            cout<<"\nIs this the correct item? (Y/N): ";
+				        cin>>ans;
+				    	cin.ignore();
+				    	
+				    	if(ans == 'y' || ans == 'Y'){
+				            itemFound = true;
+				            entry = true;
+			        	}
+			        	else if(ans == 'n' || ans == 'N'){
+							continue;
+						}
+			    	}
 			    }
+			}
 			    if (!itemFound){
 			    	cout<<"Item not found! (Please check if ID is correct)"<<endl;
 				}
@@ -439,8 +506,22 @@ void Menu(){
 			}
 			else {
 				string sortCriteria;
+				bool entry = false;
+				
+				while(!entry){
 	            cout << "\nSort by (quantity or price): ";
 	       		cin >> sortCriteria;
+	       		for (char& c : sortCriteria) {
+				    c = tolower(c);
+				}
+				if(sortCriteria == "quantity" || sortCriteria == "price"){
+					entry = true;
+				}
+				else{
+					cout<<"Error. Please try again."<<endl;
+					entry = false;
+				}
+			}
 	            Shop::sortItems(shops, sortCriteria);
 	            cout << "\nItems sorted successfully by " << sortCriteria << "!" << endl;
 				cout << "\nDisplaying sorted items:" << endl;
@@ -473,10 +554,12 @@ void Menu(){
 			cout<<"\nInvalid Input. Please try again."<<endl;			
 		}
 	}
+}
 	for(auto& shop : shops){
     	delete shop;
 	}
 }
+
 
 int main(){
 		
