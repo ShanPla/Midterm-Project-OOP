@@ -48,7 +48,7 @@ class Shop{
 			int qty;
 			double newprice;
 			string update;
-			bool isUpdated = false;
+			bool isUpdated = false, validnum = false;
 			
 			while(!isUpdated){
 				cout << "\n(Quantity or Price)" << endl;
@@ -58,25 +58,45 @@ class Shop{
 				    c = tolower(c);
 				}
 			        system("CLS");
+			    while(!validnum){
 			   	    if(update == "quantity"){
 			           	cout << "Please input the new amount of qty: ";
 			           	cin >> qty;
 			           	cin.ignore();
-			           	cout<<"Quantity of Item " << name << " is updated from "<< quantity << " to " << qty <<endl;
-						quantity = qty;
-						isUpdated = true;
+			           	if(qty == quantity){
+			           		cout<<"This is already the current quantity for this item."<<endl;
+			           		return;
+						   }
+						else if(qty>0){
+				           	cout<<"Quantity of Item " << name << " is updated from "<< quantity << " to " << qty <<endl;
+							quantity = qty;
+							isUpdated = true; validnum = true;
+						}
+						else{
+							cout<<"\nPlease enter an amount greater than 0."<<endl;
+						}
 					}
 					else if(update == "price"){
 			           	cout << "Please input the new price: ";
 			           	cin >> newprice;
 			           	cin.ignore();
-						cout<<"Quantity of Item " << name << " is updated from "<< price << " to " << newprice <<endl;
-						price = newprice;
-						isUpdated = true;
+			           	if(newprice == price){
+			           		cout<<"This is already the current price for this item."<<endl;
+			           		return;
+						   }
+						else if(price>0){
+							cout<<"Quantity of Item " << name << " is updated from "<< price << " to " << newprice <<endl;
+							price = newprice;
+							isUpdated = true; validnum = true;
+							}
+						else{
+							cout<<"\nPlease enter an amount greater than 0."<<endl;
 						}
+					}
 					else {
 						cout<<"Invalid Input. Please try again.";
 					}
+				}
 			}
 			
 		}
@@ -160,6 +180,7 @@ class Clothing : public Shop{
 		Clothing(int tempQuantity, double tempPrice, string tempID, string tempName) : Shop(tempQuantity, tempPrice, tempID, tempName){}
 		
 		void addItem() override{
+			bool qtycheck = false, pricecheck = false;
 				
 			string inputName;	
 			cout<<"\nPlease Input Name: ";
@@ -171,14 +192,30 @@ class Clothing : public Shop{
 			for (char& c : inputID) {
 			    c = toupper(c);
 			}	
-						
+			
 			int inputQuantity;
-			cout<<"\nPlease Input Quantity: ";
-			cin>>inputQuantity; cin.ignore();
+			while(!qtycheck){
+				cout<<"\nPlease Input Quantity: ";
+				cin>>inputQuantity; cin.ignore();
+				if(inputQuantity<1){
+					cout<<"\nQuantity must atleast have 1 stock."<<endl;
+				}
+				else if(inputQuantity>0){
+					qtycheck = true;
+				}
+			}
 			
 			double inputPrice;
-			cout<<"\nPlease Input Price: ";
-			cin>>inputPrice; cin.ignore();
+			while(!pricecheck){
+				cout<<"\nPlease Input Price: ";
+				cin>>inputPrice; cin.ignore();
+				if(inputPrice<1){
+					cout<<"\nPrice must atleast be worth 1php."<<endl;
+				}
+				else if(inputPrice>0){
+					pricecheck = true;
+				}
+			}
 
 			setName(inputName); setID(inputID); setQuantity(inputQuantity); setPrice(inputPrice);
 			
@@ -201,6 +238,7 @@ class Electronics : public Shop{
 		Electronics(int tempQuantity, double tempPrice, string tempID, string tempName) : Shop(tempQuantity, tempPrice, tempID, tempName){}
 		
 		void addItem() override{
+			bool qtycheck = false, pricecheck = false;
 				
 			string inputName;	
 			cout<<"\nPlease Input Name: ";
@@ -214,12 +252,28 @@ class Electronics : public Shop{
 			}
 			
 			int inputQuantity;
-			cout<<"\nPlease Input Quantity: ";
-			cin>>inputQuantity; cin.ignore();
+			while(!qtycheck){
+				cout<<"\nPlease Input Quantity: ";
+				cin>>inputQuantity; cin.ignore();
+				if(inputQuantity<1){
+					cout<<"\nQuantity must atleast have 1 stock."<<endl;
+				}
+				else if(inputQuantity>0){
+					qtycheck = true;
+				}
+			}
 			
 			double inputPrice;
-			cout<<"\nPlease Input Price: ";
-			cin>>inputPrice; cin.ignore();
+			while(!pricecheck){
+				cout<<"\nPlease Input Price: ";
+				cin>>inputPrice; cin.ignore();
+				if(inputPrice<1){
+					cout<<"\nPrice must atleast be worth 1php."<<endl;
+				}
+				else if(inputPrice>0){
+					pricecheck = true;
+				}
+			}
 			
 			setName(inputName); setID(inputID); setQuantity(inputQuantity); setPrice(inputPrice);
 
@@ -242,6 +296,7 @@ class Entertainment : public Shop{
 		Entertainment(int tempQuantity, double tempPrice, string tempID, string tempName) : Shop(tempQuantity, tempPrice, tempID, tempName){}
 		
 		void addItem() override{
+			bool qtycheck = false, pricecheck = false;
 				
 			string inputName;	
 			cout<<"\nPlease Input Name: ";
@@ -255,12 +310,28 @@ class Entertainment : public Shop{
 			}
 			
 			int inputQuantity;
-			cout<<"\nPlease Input Quantity: ";
-			cin>>inputQuantity; cin.ignore();
+			while(!qtycheck){
+				cout<<"\nPlease Input Quantity: ";
+				cin>>inputQuantity; cin.ignore();
+				if(inputQuantity<1){
+					cout<<"\nQuantity must atleast have 1 stock."<<endl;
+				}
+				else if(inputQuantity>0){
+					qtycheck = true;
+				}
+			}
 			
 			double inputPrice;
-			cout<<"\nPlease Input Price: ";
-			cin>>inputPrice; cin.ignore();
+			while(!pricecheck){
+				cout<<"\nPlease Input Price: ";
+				cin>>inputPrice; cin.ignore();
+				if(inputPrice<1){
+					cout<<"\nPrice must atleast be worth 1php."<<endl;
+				}
+				else if(inputPrice>0){
+					pricecheck = true;
+				}
+			}
 			
 			setName(inputName); setID(inputID); setQuantity(inputQuantity); setPrice(inputPrice);
 			
@@ -346,8 +417,7 @@ void Menu(){
 				}
 			break;
 		case 2:{
-			bool itemFound = false;
-			bool entry = false;
+			bool itemFound = false, entry = false, itemconfirm = false;
 			char ans;
 			if (shops.empty()) {
 			    cout << "There is no item to update." << endl;
@@ -358,7 +428,7 @@ void Menu(){
 			    cin.clear();
 				for (char& c : key) {
 				    c = toupper(c);
-				}	
+				}
 				int index = 0;
 				while(!entry){		
 				    for (auto& shop : shops) {
@@ -367,17 +437,22 @@ void Menu(){
 							tabs();
 							shop->display();
 							
-				        	cout<<"\nIs this the correct item? (Y/N): ";
-				        	cin>>ans;
-				        	cin.ignore();
-				        	if(ans == 'y' || ans == 'Y'){
-								shop->updateItem();
-						    	itemFound = true;
-						    	entry = true;
-						    	break;
-							}
-							else if(ans == 'n' || ans == 'N'){
-								continue;
+							while(ans != 'n' || ans != 'N'){
+					        	cout<<"\nIs this the correct item? (Y/N): ";
+					        	cin>>ans;
+					        	cin.ignore();
+					        	if(ans == 'y' || ans == 'Y'){
+									shop->updateItem();
+							    	itemFound = true;
+							    	entry = true;
+							    	break;
+								}
+								else if(ans == 'n' || ans == 'N'){
+									break;
+								}
+								else{
+									cout<<"\nChoose either Y or N.";
+								}
 							}
 						}
 						if(index == shops.size()){
@@ -411,7 +486,7 @@ void Menu(){
 				    for (auto it = shops.begin(); it != shops.end(); ++it) {
 				        if ((*it)->getID() == key) {
 				        	
-				        	cout<<"Item to be updated: "<<endl;
+				        	cout<<"Item to be removed: "<<endl;
 							tabs();
 							(*it)->display();
 					       	cout<<"\nIs this the correct item? (Y/N): ";
@@ -444,7 +519,7 @@ void Menu(){
 		    break;
 		}
 		case 4:{
-			bool hasCloth = false, hasElectronic = false, hasEntertainment = false, pass = false;
+			bool hasCloth = false, hasElectronic = false, hasEntertainment = false, pass = false;;
 			if (shops.empty()) {
 			    cout << "There is no item available yet." << endl;
 			}
@@ -458,23 +533,24 @@ void Menu(){
 					}
 					
 					for(auto& shop : shops){
+						pass = false;
 					    if(categoryChoice == "clothing"){
 					        Clothing* cloth = dynamic_cast<Clothing*>(shop);
 							if(cloth) {
 							categoryDisp();
 							cloth->display();		        
 							hasCloth = true;
-							pass = true;
 							}
+							pass = true;
 					    }
-					    else if(categoryChoice == "electronics"){
+					    else if(categoryChoice == "electronics" || categoryChoice == "electronic"){
 					        Electronics* electronic = dynamic_cast<Electronics*>(shop);
 					        if(electronic) {
 							categoryDisp();
 							electronic->display();
 							hasElectronic = true;
-							pass = true;
 							}
+							pass = true;
 					    }
 					    else if(categoryChoice == "entertainment"){
 					        Entertainment* entertainment = dynamic_cast<Entertainment*>(shop);
@@ -482,8 +558,8 @@ void Menu(){
 							categoryDisp();
 							entertainment->display();		        
 							hasEntertainment = true;
-							pass = true;
 							}
+							pass = true;
 						}
 						else{
 							cout<<"\nPlease choose one of the (3) category."<<endl;
