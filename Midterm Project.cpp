@@ -57,7 +57,7 @@ class Shop{
 		        for (char& c : update) {
 				    c = tolower(c);
 				}
-			        system("CLS");    
+			        system("CLS");
 			   	    if(update == "quantity"){
 			           	cout << "Please input the new amount of qty: ";
 			           	cin >> qty;
@@ -185,8 +185,7 @@ class Clothing : public Shop{
 			cout<<"\nClothing added successfully!"<<endl;		
 		}
 		
-		void display() override{
-		
+		void display() override{			
 					cout << left << setw(15) << setfill(' ') << getID();
 					cout << left << setw(15) << setfill(' ') << getName();
 					cout << left << setw(15) << setfill(' ') << getQuantity();
@@ -284,7 +283,11 @@ void tabs(){
 			cout << left << setw(15) << setfill(' ') << "Quantity";
 			cout << left << setw(15) << setfill(' ') << "Price";
 			cout << left << setw(15) << setfill(' ') << "Category"<<endl;
-		}		
+		}
+void categoryDisp(){
+	cout<<"Displaying all items in category:"<<endl;
+	tabs();
+}				
 				
 void Menu(){
 	
@@ -316,7 +319,7 @@ void Menu(){
 		system("CLS");
 	switch(choice){
 		case 1:
-			cout<<"\nPlease input category (Clothing, Electronics,  Entertainment): ";
+			cout<<"\nPlease input category (Clothing, Electronics, Entertainment): ";
 			getline(cin, categoryChoice);
 			cin.clear();
 			for (char& c : categoryChoice) {
@@ -347,7 +350,7 @@ void Menu(){
 			bool entry = false;
 			char ans;
 			if (shops.empty()) {
-			    cout << "There is no item available yet." << endl;
+			    cout << "There is no item to update." << endl;
 			    break;
 			}
 				cout << "Enter the ID to update: ";
@@ -395,7 +398,7 @@ void Menu(){
 			char ans;
 				
 			if (shops.empty()) {
-			    cout << "There is no item available yet." << endl;
+			    cout << "There is no item to remove." << endl;
 			}
 			else {
 			    cout << "Enter the ID to remove: ";
@@ -440,37 +443,65 @@ void Menu(){
 			}
 		    break;
 		}
-		case 4:
+		case 4:{
+			bool hasCloth = false, hasElectronic = false, hasEntertainment = false, pass = false;
 			if (shops.empty()) {
 			    cout << "There is no item available yet." << endl;
 			}
 			else {
-				cout<<"\n(Clothing, Electronics,  Entertainment)";
-				cout << "\nPlease input what category you would like to see: ";
-				cin>>categoryChoice;
-				for (char& c : categoryChoice) {
-				    c = tolower(c);
-				}
-				
-				cout << "\nDisplaying all items in category:" << endl;
-				tabs();
-				
-				for(auto& shop : shops){
-				    if(categoryChoice == "clothing"){
-				        Clothing* cloth = dynamic_cast<Clothing*>(shop);
-				        if(cloth) cloth->display();
-				    }
-				    else if(categoryChoice == "electronics"){
-				        Electronics* electronic = dynamic_cast<Electronics*>(shop);
-				        if(electronic) electronic->display();
-				    }
-				    else if(categoryChoice == "entertainment"){
-				        Entertainment* entertainment = dynamic_cast<Entertainment*>(shop);
-				        if(entertainment) entertainment->display();
+				while(!pass){
+					cout<<"\n(Clothing, Electronics, Entertainment)";
+					cout << "\nPlease input what category you would like to see: ";
+					cin>>categoryChoice;
+					for (char& c : categoryChoice) {
+					    c = tolower(c);
 					}
+					
+					for(auto& shop : shops){
+					    if(categoryChoice == "clothing"){
+					        Clothing* cloth = dynamic_cast<Clothing*>(shop);
+							if(cloth) {
+							categoryDisp();
+							cloth->display();		        
+							hasCloth = true;
+							pass = true;
+							}
+					    }
+					    else if(categoryChoice == "electronics"){
+					        Electronics* electronic = dynamic_cast<Electronics*>(shop);
+					        if(electronic) {
+							categoryDisp();
+							electronic->display();
+							hasElectronic = true;
+							pass = true;
+							}
+					    }
+					    else if(categoryChoice == "entertainment"){
+					        Entertainment* entertainment = dynamic_cast<Entertainment*>(shop);
+							if(entertainment) {
+							categoryDisp();
+							entertainment->display();		        
+							hasEntertainment = true;
+							pass = true;
+							}
+						}
+						else{
+							cout<<"\nPlease choose one of the (3) category."<<endl;
+						}
+					}
+				}
+				if(!hasCloth && (categoryChoice == "clothing" || categoryChoice == "clothings")){
+					cout << "There is no item available for clothing yet." << endl;
+				}
+				if(!hasElectronic && (categoryChoice == "electronics" || categoryChoice == "electronic")){
+					cout << "There is no item available for electronics yet." << endl;
+				}
+				if(!hasEntertainment && categoryChoice == "entertainment"){
+					cout << "There is no item available for entertainment yet." << endl;
 				}
 			}
 			break;
+		}
 		case 5:
 			if (shops.empty()) {
 			    cout << "There is no item available yet." << endl;
@@ -488,7 +519,7 @@ void Menu(){
 		bool entry = false;
 		char ans;
 			if (shops.empty()) {
-			    cout << "There is no item available yet." << endl;
+			    cout << "There is no item to search for yet." << endl;
 			}
 			else {
 			    cout << "Enter the ID to search: ";
@@ -530,7 +561,7 @@ void Menu(){
 		}
 		case 7:{
 			if (shops.empty()) {
-			    cout << "There is no item available yet." << endl;
+			    cout << "There is no item to sort yet." << endl;
 			}
 			else {
 				string sortCriteria;
@@ -560,24 +591,30 @@ void Menu(){
 			}
 			break;		
 		}
-		case 8:
+		case 8:{
+			bool isLow = false;
 			if (shops.empty()) {
-			    cout << "There is no item available yet." << endl;
+			    cout << "There is no items to display yet." << endl;
 			}
 			else {
-				cout<<"\nDisplaying Low Stock Items: "<<endl;
-				tabs();
 				for(auto& shop : shops){
 					if(shop->getQuantity() <= 5){
+						cout<<"\nDisplaying Low Stock Items: "<<endl;
+						tabs();
 						shop->display();
+						isLow = true;
 					}
+				}
+				if(!isLow){
+					cout<<"There is no low stock items."<<endl;
 				}
 			}
 			break;
+		}
 		case 9:
 			cout<<"Terminating program...";
 			entry = false;
-			break;	
+			break;
 		default:
 			cout<<"\nInvalid Input. Please try again."<<endl;			
 		}
@@ -586,8 +623,6 @@ void Menu(){
     	delete shop;
 	}
 }
-
-
 
 int main(){
 		
