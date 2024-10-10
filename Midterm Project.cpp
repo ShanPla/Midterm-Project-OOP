@@ -48,28 +48,36 @@ class Shop{
 			int qty;
 			double newprice;
 			string update;
+			bool isUpdated = false;
 			
-			cout << "\n(Quantity or Price)" << endl;
-		    cout << "What would you like to update for this item?: ";
-	        cin >> update;
-	        for (char& c : update) {
-			    c = tolower(c);
-			}
-		        system("CLS");    
-		   	    if(update == "quantity"){
-		           	cout << "Please input the new amount of qty: ";
-		           	cin >> qty;
-		           	cin.ignore();
-		           	cout<<"Quantity of Item " << name << " is updated from "<< quantity << " to " << qty <<endl;
-					quantity = qty;
+			while(!isUpdated){
+				cout << "\n(Quantity or Price)" << endl;
+			    cout << "What would you like to update for this item?: ";
+		        cin >> update;
+		        for (char& c : update) {
+				    c = tolower(c);
 				}
-				else if(update == "price"){
-		           	cout << "Please input the new price: ";
-		           	cin >> newprice;
-		           	cin.ignore();
-					cout<<"Quantity of Item " << name << " is updated from "<< price << " to " << newprice <<endl;
-					price = newprice;
+			        system("CLS");    
+			   	    if(update == "quantity"){
+			           	cout << "Please input the new amount of qty: ";
+			           	cin >> qty;
+			           	cin.ignore();
+			           	cout<<"Quantity of Item " << name << " is updated from "<< quantity << " to " << qty <<endl;
+						quantity = qty;
+						isUpdated = true;
 					}
+					else if(update == "price"){
+			           	cout << "Please input the new price: ";
+			           	cin >> newprice;
+			           	cin.ignore();
+						cout<<"Quantity of Item " << name << " is updated from "<< price << " to " << newprice <<endl;
+						price = newprice;
+						isUpdated = true;
+						}
+					else {
+						cout<<"Invalid Input. Please try again.";
+					}
+			}
 			
 		}
 		static void sortItems(vector<Shop*>& shops, const string& sortCriteria) {
@@ -303,13 +311,14 @@ void Menu(){
 		cout<<"================================="<<endl;
 		cout<<"Enter choice: ";
 		cin>>choice;
+		cin.ignore();
 	
 		system("CLS");
 	switch(choice){
 		case 1:
 			cout<<"\nPlease input category (Clothing, Electronics,  Entertainment): ";
-			cin>>categoryChoice;
-			cin.ignore();
+			getline(cin, categoryChoice);
+			cin.clear();
 			for (char& c : categoryChoice) {
 			    c = tolower(c);
 			}
@@ -334,25 +343,27 @@ void Menu(){
 				}
 			break;
 		case 2:{
+			bool itemFound = false;
+			bool entry = false;
+			char ans;
 			if (shops.empty()) {
 			    cout << "There is no item available yet." << endl;
+			    break;
 			}
-			else {
-					cout << "Enter the ID to update: ";
-				    cin >> key;
-					for (char& c : key) {
-					    c = toupper(c);
-					}			
-					bool itemFound = false;
-					bool entry = false;
-					char ans;
-				while(!entry){
-					
+				cout << "Enter the ID to update: ";
+			    getline(cin, key);
+			    cin.clear();
+				for (char& c : key) {
+				    c = toupper(c);
+				}	
+				int index = 0;
+				while(!entry){		
 				    for (auto& shop : shops) {
 				        if (shop->getID() == key) {
 				        	cout<<"Item to be updated: "<<endl;
 							tabs();
 							shop->display();
+							
 				        	cout<<"\nIs this the correct item? (Y/N): ";
 				        	cin>>ans;
 				        	cin.ignore();
@@ -362,58 +373,70 @@ void Menu(){
 						    	entry = true;
 						    	break;
 							}
-						else if(ans == 'n' || ans == 'N'){
-							continue;
+							else if(ans == 'n' || ans == 'N'){
+								continue;
+							}
 						}
+						if(index == shops.size()){
+							entry = true;
+						}
+						index++;
+					}
+					if(!itemFound){
+				    	cout<<"Item not found! (Please check if ID is correct)"<<endl;
+				    	break;
 					}
 				}
-				    if(!itemFound){
-				    	cout<<"Item not found! (Please check if ID is correct)"<<endl;
-					}
+				break;
 			}
-			break;
-		}
 		case 3:{
+			bool itemFound = false;
+			bool entry = false;
+			char ans;
+				
 			if (shops.empty()) {
 			    cout << "There is no item available yet." << endl;
 			}
 			else {
 			    cout << "Enter the ID to remove: ";
-			    cin >> key;
+			    getline(cin, key);
 			    for (char& c : key) {
 				    c = toupper(c);
-				}		    
-			    bool itemFound = false;
-			    bool entry = false;
-				char ans;
-			while(!entry){
-			    for (auto it = shops.begin(); it != shops.end(); ++it) {
-			        if ((*it)->getID() == key) {
-			        	
-			        	cout<<"Item to be updated: "<<endl;
-						tabs();
-						(*it)->display();
-				       	cout<<"\nIs this the correct item? (Y/N): ";
-				       	cin>>ans;
-				       	cin.ignore();
-				       	
-				       	if(ans == 'y' || ans == 'Y'){
-				        	cout<<"Item "<<(*it)->getName()<<" has been removed from the inventory!"<<endl;
-				            delete *it;
-				            shops.erase(it);
-				            itemFound = true;
-				            entry = true;
-				            break;
+				}
+				int index = 0;		    
+				while(!entry){
+				    for (auto it = shops.begin(); it != shops.end(); ++it) {
+				        if ((*it)->getID() == key) {
+				        	
+				        	cout<<"Item to be updated: "<<endl;
+							tabs();
+							(*it)->display();
+					       	cout<<"\nIs this the correct item? (Y/N): ";
+					       	cin>>ans;
+					       	cin.ignore();
+					       	
+					       	if(ans == 'y' || ans == 'Y'){
+					        	cout<<"Item "<<(*it)->getName()<<" has been removed from the inventory!"<<endl;
+					            delete *it;
+					            shops.erase(it);
+					            itemFound = true;
+					            entry = true;
+					            break;
+					        }
+					        else if(ans == 'n' || ans == 'N'){
+								continue;
+							}
 				        }
-				        else if(ans == 'n' || ans == 'N'){
-							continue;
-						}
-			        }
-			    }	
-			}
-			    if (!itemFound) {
-			        cout << "Item not found! (Please check if ID is correct)" << endl;
-			    }
+						if(index == shops.size()){
+								entry = true;
+							}
+							index++;   
+					    }	
+					if (!itemFound) {
+				        cout << "Item not found! (Please check if ID is correct)." << endl;
+				        break;
+				    }
+				}
 			}
 		    break;
 		}
@@ -461,41 +484,46 @@ void Menu(){
 			}
 			break;
 		case 6:{
+		bool itemFound = false;
+		bool entry = false;
+		char ans;
 			if (shops.empty()) {
 			    cout << "There is no item available yet." << endl;
 			}
 			else {
 			    cout << "Enter the ID to search: ";
-			    cin >> key;
+			    getline(cin, key);
 			    for (char& c : key) {
 				    c = toupper(c);
 				}
-	
-			    bool itemFound = false;
-			    bool entry = false;
-				char ans;
-			while(!entry){
-			    for (auto& shop : shops) {
-			        if (shop->getID() == key) { 
-						cout << "\nDisplaying requested item:" << endl;
-						tabs();
-			            shop->display();
-			            cout<<"\nIs this the correct item? (Y/N): ";
-				        cin>>ans;
-				    	cin.ignore();
-				    	
-				    	if(ans == 'y' || ans == 'Y'){
-				            itemFound = true;
-				            entry = true;
-			        	}
-			        	else if(ans == 'n' || ans == 'N'){
-							continue;
+				int index = 0;
+				while(!entry){
+				    for (auto& shop : shops) {
+				        if (shop->getID() == key) { 
+							cout << "\nDisplaying requested item:" << endl;
+							tabs();
+				            shop->display();
+				            cout<<"\nIs this the correct item? (Y/N): ";
+					        cin>>ans;
+					    	cin.ignore();
+					    	
+					    	if(ans == 'y' || ans == 'Y'){
+					            itemFound = true;
+					            entry = true;
+				        	}
+				        	else if(ans == 'n' || ans == 'N'){
+								continue;
+							}
+				    	}
+				    	if(index == shops.size()){
+								entry = true;
+							}
+							index++;  	
+				    }
+					if (!itemFound){
+					    	cout<<"Item not found! (Please check if ID is correct)."<<endl;
+					    	break;
 						}
-			    	}
-			    }
-			}
-			    if (!itemFound){
-			    	cout<<"Item not found! (Please check if ID is correct)"<<endl;
 				}
 			}
 			break;
@@ -510,7 +538,7 @@ void Menu(){
 				
 				while(!entry){
 	            cout << "\nSort by (quantity or price): ";
-	       		cin >> sortCriteria;
+	       		getline(cin, sortCriteria);
 	       		for (char& c : sortCriteria) {
 				    c = tolower(c);
 				}
@@ -554,11 +582,11 @@ void Menu(){
 			cout<<"\nInvalid Input. Please try again."<<endl;			
 		}
 	}
-}
 	for(auto& shop : shops){
     	delete shop;
 	}
 }
+
 
 
 int main(){
