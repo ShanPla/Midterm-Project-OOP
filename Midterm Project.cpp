@@ -20,6 +20,7 @@ bool digitcheck(const string& str) {
     if (str[0] == '-') {
         start = 1;
     }
+    if (start == 1 && str.length() == 1) return false;
 
     for (size_t i = start; i < str.length(); ++i) {
         // Check if the current character is a decimal point
@@ -105,7 +106,7 @@ class Shop{
 						}
 			        } 
 					else {
-			            cout << "Numbers not allowed. Please try again.\n";
+			            cout << "Numbers/Symbols are not allowed. Please try again.\n";
 			        }
 			        cin.clear();
 		   		}	        		        
@@ -267,7 +268,7 @@ class Clothing : public Shop{
 				cout<<"\nPlease Input Quantity: ";
 				cin>>input;
 			if (digitcheck(input)) {
-                inputQuantity = stoi(input);
+                inputQuantity = stod(input);
                 if (inputQuantity > 0) {
                     validInput = true;
                 }
@@ -276,7 +277,7 @@ class Clothing : public Shop{
                 }
             }
 			else {
-                cout << "Invalid input! Please enter digits only.\n";
+                cout << "Invalid input! Please enter a positive integer.\n";
             }
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -288,7 +289,7 @@ class Clothing : public Shop{
 				cout<<"\nPlease Input Price: ";
 				cin>>input;
 			if (digitcheck(input)) {
-                inputPrice = stoi(input);
+                inputPrice = stod(input);
                 if (inputPrice > 0) {
                     validInput = true;
                 }
@@ -297,7 +298,7 @@ class Clothing : public Shop{
                 }
             }
 			else {
-                cout << "Invalid input! Please enter digits only.\n";
+                cout << "Invalid input! Please enter a positive integer.\n";
             }
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -342,7 +343,7 @@ class Electronics : public Shop{
 				cout<<"\nPlease Input Quantity: ";
 				cin>>input;
 			if (digitcheck(input)) {
-                inputQuantity = stoi(input);
+                inputQuantity = stod(input);
                 if (inputQuantity > 0) {
                     validInput = true;
                 }
@@ -351,7 +352,7 @@ class Electronics : public Shop{
                 }
             }
 			else {
-                cout << "Invalid input! Please enter digits only.\n";
+                cout << "Invalid input! Please enter a positive integer.\n";
             }
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -363,7 +364,7 @@ class Electronics : public Shop{
 				cout<<"\nPlease Input Price: ";
 				cin>>input;
 			if (digitcheck(input)) {
-                inputPrice = stoi(input);
+                inputPrice = stod(input);
                 if (inputPrice > 0) {
                     validInput = true;
                 }
@@ -372,7 +373,7 @@ class Electronics : public Shop{
                 }
             }
 			else {
-                cout << "Invalid input! Please enter digits only.\n";
+                cout << "Invalid input! Please enter a positive integer.\n";
             }
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -417,7 +418,7 @@ class Entertainment : public Shop{
 				cout<<"\nPlease Input Quantity: ";
 				cin>>input;
 			if (digitcheck(input)) {
-                inputQuantity = stoi(input);
+                inputQuantity = stod(input);
                 if (inputQuantity > 0) {
                     validInput = true;
                 }
@@ -426,7 +427,7 @@ class Entertainment : public Shop{
                 }
             }
 			else {
-                cout << "Invalid input! Please enter digits only.\n";
+                cout << "Invalid input! Please enter a positive integer.\n";
             }
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -438,7 +439,7 @@ class Entertainment : public Shop{
 				cout<<"\nPlease Input Price: ";
 				cin>>input;
 			if (digitcheck(input)) {
-                inputPrice = stoi(input);
+                inputPrice = stod(input);
                 if (inputPrice > 0) {
                     validInput = true;
                 }
@@ -447,7 +448,7 @@ class Entertainment : public Shop{
                 }
             }
 			else {
-                cout << "Invalid input! Please enter digits only.\n";
+                cout << "Invalid input! Please enter a positive integer.\n";
             }
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -484,7 +485,7 @@ void Menu(){
 	
 	vector<Shop*> shops;					
 	bool entry = true;	
-	string category, categoryChoice, key, input;
+	string category, key, input;
 	int choice;
 	
 	while(entry == true){
@@ -515,16 +516,16 @@ void Menu(){
                     cout << "Invalid choice! Please enter a number between 1 and 9.\n";
                 }
             } else {
-                cout << "Invalid input! Please enter digits only.\n";
+                cout << "Invalid input! Please choose from the menu.\n";
             }
-
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
                
 		system("CLS");
 	switch(choice){
-		case 1:
+		case 1:{
+			string categoryChoice;
 			cout<<"\nPlease input category (Clothing, Electronics, Entertainment): ";
 			getline(cin, categoryChoice);
 			cin.clear();
@@ -551,6 +552,7 @@ void Menu(){
 					cout<<"\nCategory "<<categoryChoice<<" does not exist!"<<endl;
 				}
 			break;
+		}
 		case 2:{
 			bool itemFound = false, itemconfirm = false;
 			char ans;
@@ -645,69 +647,73 @@ void Menu(){
 		    break;
 		}
 		case 4:{
-			bool hasCloth = false, hasElectronic = false, hasEntertainment = false, pass = false, showDisp = false;
+			bool hasCloth = false, hasElectronic = false, hasEntertainment = false, pass = false;
+			string categoryChoice;
 			if (shops.empty()) {
 			    cout << "There is no item available yet." << endl;
 			}
 			else {
-				while(!pass){
-					cout<<"\n(Clothing, Electronics, Entertainment)";
-					cout << "\nPlease input what category you would like to see: ";
-					cin>>categoryChoice; cin.ignore(numeric_limits<streamsize>::max(), '\n');
-					for (char& c : categoryChoice) {
-					    c = tolower(c);
-					}
-					showDisp = false;
-					for(auto& shop : shops){
-						pass = false;
-					    if(categoryChoice == "clothing"){
-					        Clothing* cloth = dynamic_cast<Clothing*>(shop);
-							if(cloth) {
-								if(!showDisp){
-									categoryDisp(); showDisp = true;
-								}
-							cloth->display();		        
-							hasCloth = true;
-							}
-							pass = true;
-					    }
-					    else if(categoryChoice == "electronics" || categoryChoice == "electronic"){
-					        Electronics* electronic = dynamic_cast<Electronics*>(shop);
-					        if(electronic) {
-					        	if(!showDisp){
-									categoryDisp(); showDisp = true;
-								}
-							electronic->display();
-							hasElectronic = true;
-							}
-							pass = true;
-					    }
-					    else if(categoryChoice == "entertainment"){
-					        Entertainment* entertainment = dynamic_cast<Entertainment*>(shop);
-							if(entertainment) {
-								if(!showDisp){
-									categoryDisp(); showDisp = true;
-								}	
-							entertainment->display();		        
-							hasEntertainment = true;
-							}
-							pass = true;
+					while(!pass){
+						cout<<"\n(Clothing, Electronics, Entertainment)";
+						cout << "\nPlease input what category you would like to see: ";
+						cin>>categoryChoice;  cin.ignore(numeric_limits<streamsize>::max(), '\n');
+						for (char& c : categoryChoice) {
+						    c = tolower(c);
 						}
-						else{
-							cout<<"\nPlease choose one of the (3) category."<<endl;
-						}
+						bool showDisp = false;
+						if(categoryChoice == "clothing" || categoryChoice == "electronics" || categoryChoice == "entertainment") {
+							for(auto& shop : shops){
+								pass = false;
+							    if(categoryChoice == "clothing"){
+							        Clothing* cloth = dynamic_cast<Clothing*>(shop);
+									if(cloth) {
+										if(!showDisp){
+											categoryDisp(); showDisp = true;
+										}
+									cloth->display();		        
+									hasCloth = true;
+									}
+									pass = true;
+							    }
+							    else if(categoryChoice == "electronics" || categoryChoice == "electronic"){
+							        Electronics* electronic = dynamic_cast<Electronics*>(shop);
+							        if(electronic) {
+							        	if(!showDisp){
+											categoryDisp(); showDisp = true;
+										}
+									electronic->display();
+									hasElectronic = true;
+									}
+									pass = true;
+							    }
+							    else if(categoryChoice == "entertainment"){
+							        Entertainment* entertainment = dynamic_cast<Entertainment*>(shop);
+									if(entertainment) {
+										if(!showDisp){
+											categoryDisp(); showDisp = true;
+										}	
+									entertainment->display();		        
+									hasEntertainment = true;
+									}
+									pass = true;
+								}
+							
+							}
+					if(!hasCloth && categoryChoice == "clothing"){
+						cout << "There is no item available for clothing yet." << endl;
+					}
+					if(!hasElectronic && (categoryChoice == "electronics" || categoryChoice == "electronic")){
+						cout << "There is no item available for electronics yet." << endl;
+					}
+					if(!hasEntertainment && categoryChoice == "entertainment"){
+						cout << "There is no item available for entertainment yet." << endl;
 					}
 				}
-				if(!hasCloth && (categoryChoice == "clothing" || categoryChoice == "clothings")){
-					cout << "There is no item available for clothing yet." << endl;
-				}
-				if(!hasElectronic && (categoryChoice == "electronics" || categoryChoice == "electronic")){
-					cout << "There is no item available for electronics yet." << endl;
-				}
-				if(!hasEntertainment && categoryChoice == "entertainment"){
-					cout << "There is no item available for entertainment yet." << endl;
+				else{
+					cout<<"\nPlease choose one of the (3) category."<<endl;
 				}
 			}
+		}
 			break;
 		}
 		case 5:
