@@ -4,49 +4,46 @@
 #include <limits>
 using namespace std;
 
-bool isOnlyDigits(const string& str) {
+bool isOnlyDigits(const string& str) { // Validation for inputs to prevent decimals
     for (char const &c : str) {
         if (!isdigit(c)) return false;
     }
     return true;
 }
-bool digitcheck(const string& str) {
+bool digitcheck(const string& str) { // Validation for price so it denies negative numbers or special characters
     if (str.empty()) return false;
 
     size_t start = 0;
     bool decimalPointFound = false;
 
-    // Check if the first character is a negative sign
-    if (str[0] == '-') {
+    if (str[0] == '-') { // Check if the first character is a negative sign
         start = 1;
     }
     if (start == 1 && str.length() == 1) return false;
 
     for (size_t i = start; i < str.length(); ++i) {
-        // Check if the current character is a decimal point
-        if (str[i] == '.') {
+        if (str[i] == '.') { // Check if the current character is a decimal point
             // Allow only one decimal point in the string
             if (decimalPointFound) return false;
             decimalPointFound = true;
         }
-        // If the character is not a digit and not a decimal point, return false
-        else if (!isdigit(str[i])) {
+        else if (!isdigit(str[i])) { // If the character is not a digit and not a decimal point, return false
             return false;
         }
     }
 
     return true;
 }
-bool isOnlyLetters(const string& str) {
+bool isOnlyLetters(const string& str) { // Checks if the string is only letters
     if (str.empty()) return false;
 
-    for (char const &c : str) {
+    for (char const &c : str) { // Checks each character if it is a letter
         if (!isalpha(c)) return false;
     }
 
     return true;
 }
-class Shop{
+class Shop{ // Abstract class
 	
 	private:
 		int quantity;
@@ -56,10 +53,10 @@ class Shop{
 	public:
 		Shop(int tempQuantity, double tempPrice, string tempID, string tempName) : quantity(tempQuantity), price(tempPrice), ID(tempID), name(tempName){}
 		
-		virtual void addItem() = 0;
+		virtual void addItem() = 0; // Virtual void declarations
 		virtual void display() = 0;
 		
-		void setName(string a){
+		void setName(string a){ // Setters
 			name = a;
 		}
 		void setID(string b){
@@ -72,7 +69,7 @@ class Shop{
 			price = a;
 		}
 		
-		string getName(){
+		string getName(){ // Getters
 			return name;
 		}
 		string getID(){
@@ -85,21 +82,20 @@ class Shop{
 			return price;
 		}
 		
-		void updateItem(){
+		void updateItem(){ // Update function that all three category can use
 			
 			int qty;
 			double newprice;
 			string update, input;
 			bool isUpdated = false, validInput = false, validCategory = false;
-			while(!isUpdated){
-			
-   				while (!validCategory) {
+			while(!isUpdated){		
+   				while (!validCategory) { // Checks if user input is in line with the options, if not, loops
 					cout << "\n(Quantity or Price)" << endl;
 				    cout << "What would you like to update for this item?: ";
 			        getline(cin, update);        
 			        if (isOnlyLetters(update)) {
 			        	if(update == "quantity" || update == "price"){
-			            validCategory = true;
+			            validCategory = true; // Passes the loop if correct option
 						}
 						else{
 							cout << "Invalid input! Please enter one of the two choices.\n";
@@ -110,7 +106,7 @@ class Shop{
 			        }
 			        cin.clear();
 		   		}	        		        
-		        for (char& c : update) {
+		        for (char& c : update) { // Makes update case insensitive
 				    c = tolower(c);
 				}
 					
@@ -120,7 +116,7 @@ class Shop{
 			           	cout << "Please input the new amount of qty: ";
 			           	cin >> input;
 			           	if (digitcheck(input)) {
-				            qty = stoi(input);
+				            qty = stoi(input); // Converts input to numeric value
 				            if(qty == quantity){
 				            	cout<<"This is already the current quantity for this item."<<endl;
 				            	return;
@@ -146,7 +142,7 @@ class Shop{
 			           	cout << "Please input the new price: ";
 			           	cin >> input;
 			           	if (digitcheck(input)) {
-				            newprice = stoi(input);
+				            newprice = stoi(input); // Converts input to numeric value
 				            if(newprice == price){
 				            	cout<<"This is already the current price for this item."<<endl;
 				            	return;
@@ -163,13 +159,11 @@ class Shop{
 						else {
 				            cout << "Invalid input! Please enter digits only.\n\n";
 				        }
-				        cin.clear();
-				        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+				        cin.clear(); cin.ignore(numeric_limits<streamsize>::max(), '\n');  // Ignores invalid input
 				        }
 				    }
 				}
-			}
-		
+			}	
 		static void sortItems(vector<Shop*>& shops, const string& sortCriteria) {
 		    int n = shops.size();
 		    bool entry = false;
@@ -182,7 +176,7 @@ class Shop{
 					    c = tolower(c);
 					}  	
 		        if(sortMethod == "ascending"){
-				    if (sortCriteria == "quantity") {
+				    if (sortCriteria == "quantity") { // Sorts quantity in ascending order
 				        for (int i = 0; i < n - 1; i++) {
 				            for (int j = 0; j < n - i - 1; j++) {
 				                if (shops[j]->getQuantity() > shops[j + 1]->getQuantity()) {
@@ -193,7 +187,7 @@ class Shop{
 				                }
 				            }
 				        }
-				    } else if (sortCriteria == "price") {
+				    } else if (sortCriteria == "price") { // Sorts price in ascending order
 				        for (int i = 0; i < n - 1; i++) {
 				            for (int j = 0; j < n - i - 1; j++) {
 				                if (shops[j]->getPrice() > shops[j + 1]->getPrice()) {
@@ -208,8 +202,7 @@ class Shop{
 				    entry = true;
 				}
 				else if(sortMethod == "descending"){
-					if (sortCriteria == "quantity") {
-			
+					if (sortCriteria == "quantity") { // Sorts quantity in descending order		
 				        for (int i = 0; i < n - 1; i++) {
 				            for (int j = 0; j < n - i - 1; j++) {
 				                if (shops[j]->getQuantity() < shops[j + 1]->getQuantity()) {
@@ -220,8 +213,7 @@ class Shop{
 				                }
 				            }
 				        }
-				    } else if (sortCriteria == "price") {
-		
+				    } else if (sortCriteria == "price") { // Sorts price in descending order		
 				        for (int i = 0; i < n - 1; i++) {
 				            for (int j = 0; j < n - i - 1; j++) {
 				                if (shops[j]->getPrice() < shops[j + 1]->getPrice()) {
@@ -259,7 +251,7 @@ class Clothing : public Shop{
 			string inputID;
 			cout<<"\nPlease Input ID: ";
 			getline(cin, inputID);
-			for (char& c : inputID) {
+			for (char& c : inputID) { // Makes ID case insensitive
 			    c = toupper(c);
 			}	
 
@@ -267,9 +259,9 @@ class Clothing : public Shop{
 			while(!validInput){
 				cout<<"\nPlease Input Quantity: ";
 				cin>>input;
-			if (digitcheck(input)) {
-                inputQuantity = stod(input);
-                if (inputQuantity > 0) {
+			if (isOnlyDigits(input)) {
+                inputQuantity = stod(input); // Converts input into a double
+                if (inputQuantity > 0) { // Checks if inputQuality is valid
                     validInput = true;
                 }
                 else if(inputQuantity < 1){
@@ -277,10 +269,10 @@ class Clothing : public Shop{
                 }
             }
 			else {
-                cout << "Invalid input! Please enter a positive integer.\n";
+                cout << "Invalid input! Please enter a valid integer.\n";
             }
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignores invalid input
         }
         	validInput = false;
 			
@@ -289,8 +281,8 @@ class Clothing : public Shop{
 				cout<<"\nPlease Input Price: ";
 				cin>>input;
 			if (digitcheck(input)) {
-                inputPrice = stod(input);
-                if (inputPrice > 0) {
+                inputPrice = stod(input); // Converts input into a double
+                if (inputPrice > 0) { // Checks if inputPrice is valid
                     validInput = true;
                 }
                 else if(inputPrice < 1){
@@ -298,22 +290,21 @@ class Clothing : public Shop{
                 }
             }
 			else {
-                cout << "Invalid input! Please enter a positive integer.\n";
+                cout << "Invalid input! Please enter a valid integer.\n";
             }
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin.clear(); cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignores invalid input
         }
 
-			setName(inputName); setID(inputID); setQuantity(inputQuantity); setPrice(inputPrice);
+			setName(inputName); setID(inputID); setQuantity(inputQuantity); setPrice(inputPrice); // passes the values to setter
 			
 			cout<<"\nClothing added successfully!"<<endl;		
 		}
 		
-		void display() override{			
+		void display() override{ // Displays the items		
 					cout << left << setw(15) << setfill(' ') << getID();
 					cout << left << setw(15) << setfill(' ') << getName();
 					cout << left << setw(15) << setfill(' ') << getQuantity();
-					cout << left << setw(15) << setfill(' ') << getPrice();
+					cout << fixed << setprecision(2) << left << setw(15) << setfill(' ') << getPrice();
 					cout << left << setw(15) << setfill(' ') << "Clothing" << endl;
                 }
 		};	
@@ -334,7 +325,7 @@ class Electronics : public Shop{
 			string inputID;
 			cout<<"\nPlease Input ID: ";
 			getline(cin, inputID);
-			for (char& c : inputID) {
+			for (char& c : inputID) { // Makes ID case insensitive
 			    c = toupper(c);
 			}
 			
@@ -342,9 +333,9 @@ class Electronics : public Shop{
 			while(!validInput){
 				cout<<"\nPlease Input Quantity: ";
 				cin>>input;
-			if (digitcheck(input)) {
-                inputQuantity = stod(input);
-                if (inputQuantity > 0) {
+			if (isOnlyDigits(input)) {
+                inputQuantity = stod(input); // Converts input into a double
+                if (inputQuantity > 0) { // Checks if inputQuality is valid
                     validInput = true;
                 }
                 else if(inputQuantity < 1){
@@ -352,10 +343,10 @@ class Electronics : public Shop{
                 }
             }
 			else {
-                cout << "Invalid input! Please enter a positive integer.\n";
+                cout << "Invalid input! Please enter a valid integer.\n";
             }
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignores invalid input
         }
         	validInput = false;
 			
@@ -364,8 +355,8 @@ class Electronics : public Shop{
 				cout<<"\nPlease Input Price: ";
 				cin>>input;
 			if (digitcheck(input)) {
-                inputPrice = stod(input);
-                if (inputPrice > 0) {
+                inputPrice = stod(input); // Converts input into a double
+                if (inputPrice > 0) { // Checks if inputPrice is valid
                     validInput = true;
                 }
                 else if(inputPrice < 1){
@@ -373,22 +364,22 @@ class Electronics : public Shop{
                 }
             }
 			else {
-                cout << "Invalid input! Please enter a positive integer.\n";
+                cout << "Invalid input! Please enter a valid integer.\n";
             }
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignores invalid input
         }
 			
-			setName(inputName); setID(inputID); setQuantity(inputQuantity); setPrice(inputPrice);
+			setName(inputName); setID(inputID); setQuantity(inputQuantity); setPrice(inputPrice); // passes the values to setter
 
 			cout<<"\nElecronic added successfully!"<<endl;		
 		}
 		
-		void display() override{		
+		void display() override{ // Displays the items	
 					cout << left << setw(15) << setfill(' ') << getID();
 					cout << left << setw(15) << setfill(' ') << getName();
 					cout << left << setw(15) << setfill(' ') << getQuantity();
-					cout << left << setw(15) << setfill(' ') << getPrice();
+					cout << fixed << setprecision(2) << left << setw(15) << setfill(' ') << getPrice();
 					cout << left << setw(15) << setfill(' ') << "Electronics" << endl;
                 }
 		};			
@@ -409,7 +400,7 @@ class Entertainment : public Shop{
 			string inputID;
 			cout<<"\nPlease Input ID: ";
 			getline(cin, inputID);
-			for (char& c : inputID) {
+			for (char& c : inputID) { // Makes ID case insensitive
 			    c = toupper(c);
 			}
 			
@@ -417,9 +408,9 @@ class Entertainment : public Shop{
 			while(!validInput){
 				cout<<"\nPlease Input Quantity: ";
 				cin>>input;
-			if (digitcheck(input)) {
-                inputQuantity = stod(input);
-                if (inputQuantity > 0) {
+			if (isOnlyDigits(input)) {
+                inputQuantity = stod(input); // Converts input into a double
+                if (inputQuantity > 0) { // Checks if inputQuality is valid
                     validInput = true;
                 }
                 else if(inputQuantity < 1){
@@ -427,10 +418,10 @@ class Entertainment : public Shop{
                 }
             }
 			else {
-                cout << "Invalid input! Please enter a positive integer.\n";
+                cout << "Invalid input! Please enter a valid integer.\n";
             }
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignores invalid input
         }
         	validInput = false;
 			
@@ -439,8 +430,8 @@ class Entertainment : public Shop{
 				cout<<"\nPlease Input Price: ";
 				cin>>input;
 			if (digitcheck(input)) {
-                inputPrice = stod(input);
-                if (inputPrice > 0) {
+                inputPrice = stod(input); // Converts input into a double
+                if (inputPrice > 0) { // Checks if inputPrice is valid
                     validInput = true;
                 }
                 else if(inputPrice < 1){
@@ -448,33 +439,33 @@ class Entertainment : public Shop{
                 }
             }
 			else {
-                cout << "Invalid input! Please enter a positive integer.\n";
+                cout << "Invalid input! Please enter a valid integer.\n";
             }
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignores invalid input
         }
 					
-			setName(inputName); setID(inputID); setQuantity(inputQuantity); setPrice(inputPrice);
+			setName(inputName); setID(inputID); setQuantity(inputQuantity); setPrice(inputPrice); // passes the values to setter
 			
 			cout<<"\nEntertainment added successfully!"<<endl;
 		}
 		
-		void display() override{
-		
+		void display() override{ // Displays the items		
 					cout << left << setw(15) << setfill(' ') << getID();   
 					cout << left << setw(15) << setfill(' ') << getName();
 					cout << left << setw(15) << setfill(' ') << getQuantity();
-					cout << left << setw(15) << setfill(' ') << getPrice();
+					cout << fixed << setprecision(2) << left << setw(15) << setfill(' ') << getPrice();
 					cout << left << setw(15) << setfill(' ') << "Entertainment" << endl;
                 }
 		};	
 		
-void tabs(){
+void tabs(){ // Displays the header
 			cout << left << setw(15) << setfill(' ') << "ID";
 			cout << left << setw(15) << setfill(' ') << "Name";
 			cout << left << setw(15) << setfill(' ') << "Quantity";
 			cout << left << setw(15) << setfill(' ') << "Price";
 			cout << left << setw(15) << setfill(' ') << "Category"<<endl;
+			cout << "--------------------------------------------------------------------"<<endl;
 		}
 void categoryDisp(){
 	cout<<"Displaying all items in category:"<<endl;
@@ -483,7 +474,7 @@ void categoryDisp(){
 				
 void Menu(){
 	
-	vector<Shop*> shops;					
+	vector<Shop*> shops; // Declares vector to hold pointers to Shop
 	bool entry = true;	
 	string category, key, input;
 	int choice;
@@ -502,9 +493,9 @@ void Menu(){
 		cout<<"[9] - Exit"<<endl;
 		cout<<"================================="<<endl;
 		
-		bool validInput = false;
+		bool validInput = false; // Declares validInput
         
-        while (!validInput) {
+        while (!validInput) { // Loops until validation is satisfied
             cout << "Enter choice: ";
             cin >> input;
 
@@ -518,10 +509,8 @@ void Menu(){
             } else {
                 cout << "Invalid input! Please choose from the menu.\n";
             }
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        }
-               
+            cin.clear(); cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignores invalid input
+        }            
 		system("CLS");
 	switch(choice){
 		case 1:{
@@ -533,8 +522,8 @@ void Menu(){
 			    c = tolower(c);
 			}
 			
-				if(categoryChoice == "clothing" || categoryChoice == "clothings"){
-					Shop* cloth = new Clothing(0,0," ", " ");
+				if(categoryChoice == "clothing" || categoryChoice == "clothings"){ // All if statements check for categories
+					Shop* cloth = new Clothing(0,0," ", " "); // Declares a pointer cloth to point to Shop, assigns Clothing's address to cloth // Same for the other two categories.
 					cloth->addItem();
 					shops.push_back(cloth);
 				}
@@ -549,7 +538,7 @@ void Menu(){
 					shops.push_back(entertainment);
 				}
 				else{
-					cout<<"\nCategory "<<categoryChoice<<" does not exist!"<<endl;
+					cout<<"\nCategory "<<categoryChoice<<" does not exist!"<<endl; // Displays if input is not of the three categories
 				}
 			break;
 		}
@@ -557,27 +546,27 @@ void Menu(){
 			bool itemFound = false, itemconfirm = false;
 			char ans;
 			if (shops.empty()) {
-			    cout << "There is no item to update." << endl;
+			    cout << "There is no item to update." << endl; // Displays if shops is empty
 			    break;
 			}
 				cout << "Enter the ID to update: ";
 			    getline(cin, key);
 			    cin.clear();
-				for (char& c : key) {
+				for (char& c : key) { // Makes the key case insensitive
 				    c = toupper(c);
 				}
 				    for (auto& shop : shops) {
-				        if (shop->getID() == key) {
+				        if (shop->getID() == key) { // Checks if getID matches the key
 				        	cout<<"Item to be updated: "<<endl;
 							tabs();
-							shop->display();
+							shop->display(); // Displays the item to be updated
 							
-							while(ans != 'n' || ans != 'N'){
+							while(ans != 'n' || ans != 'N'){ // Loops until validation is satisfied
 					        	cout<<"\nIs this the correct item? (Y/N): ";
 					        	cin>>ans;
-					        	cin.clear(); cin.ignore(numeric_limits<streamsize>::max(), '\n');
+					        	cin.clear(); cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignores invalid input
 					        	if(ans == 'y' || ans == 'Y'){
-									shop->updateItem();
+									shop->updateItem(); // Calls updateItem function
 							    	itemFound = true;
 							    	entry = true;
 							    	break;
@@ -591,7 +580,7 @@ void Menu(){
 							}
 						}
 					}
-					if(!itemFound){
+					if(!itemFound){ // Runs if item is not found
 				    	cout<<"Item not found! (Please check if ID is correct)"<<endl;
 				    	break;
 					}
@@ -602,44 +591,45 @@ void Menu(){
 			char ans;
 				
 			if (shops.empty()) {
-			    cout << "There is no item to remove." << endl;
+			    cout << "There is no item to remove." << endl; // Displays if shops is empty
 			}
 			else {
 			    cout << "Enter the ID to remove: ";
 			    getline(cin, key);
-			    for (char& c : key) {
+			    for (char& c : key) { // Makes the key case insensitive
 				    c = toupper(c);
 				}
 				    for (auto it = shops.begin(); it != shops.end(); ++it) {
-				        if ((*it)->getID() == key) {
+				        if ((*it)->getID() == key) { // Checks if "it" matches the key
 				        	
 				        	cout<<"Item to be removed: "<<endl;
 							tabs();
-							(*it)->display();
+							(*it)->display(); // Displays the item to be removed
 					
 							proceed = false;
-							while(!proceed){
+							while(!proceed){ // Loops until validation is satisfied
 						       	cout<<"\nIs this the correct item? (Y/N): ";
 						       	cin>>ans;
-						       	cin.clear(); cin.ignore(numeric_limits<streamsize>::max(), '\n');
+						       	cin.clear(); cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignores invalid input
 						       	
 						       	if(ans == 'y' || ans == 'Y'){
 						        	cout<<"Item "<<(*it)->getName()<<" has been removed from the inventory!"<<endl;
-						            delete *it;
-						            shops.erase(it);
+						            delete *it; // Deallocates memory
+						            shops.erase(it); // Removes the element from vector
 						            itemFound = true; proceed = true;
 						            break;
 						        }
 						        else if(ans == 'n' || ans == 'N'){
-									proceed = true;
+									proceed = true; // Sets bool to true to continue to next for loop
 								}
 								else{
 									cout<<"\nChoose either Y or N.";
 								}
 							}
+							if (itemFound) break; // Exits for loop is item is found and removed
 				        }
 					}
-					if (!itemFound) {
+					if (!itemFound) { // Runs if item is not found
 				        cout << "Item not found! (Please check if ID is correct)." << endl;
 				        break;
 				    }
@@ -650,67 +640,67 @@ void Menu(){
 			bool hasCloth = false, hasElectronic = false, hasEntertainment = false, pass = false;
 			string categoryChoice;
 			if (shops.empty()) {
-			    cout << "There is no item available yet." << endl;
+			    cout << "There is no item available yet." << endl; // Displays if shops is empty
 			}
 			else {
-					while(!pass){
+					while(!pass){ // Loops until validation is satisfied
 						cout<<"\n(Clothing, Electronics, Entertainment)";
 						cout << "\nPlease input what category you would like to see: ";
-						cin>>categoryChoice;  cin.ignore(numeric_limits<streamsize>::max(), '\n');
+						cin>>categoryChoice;  cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignores invalid input
 						for (char& c : categoryChoice) {
 						    c = tolower(c);
 						}
-						bool showDisp = false;
+						bool showDisp = false, pass = false; // Initializes the bool to false
 						if(categoryChoice == "clothing" || categoryChoice == "electronics" || categoryChoice == "entertainment") {
 							for(auto& shop : shops){
-								pass = false;
 							    if(categoryChoice == "clothing"){
-							        Clothing* cloth = dynamic_cast<Clothing*>(shop);
-									if(cloth) {
+							        Clothing* cloth = dynamic_cast<Clothing*>(shop); // Checks if shop is pointing to a Clothing object, if it does, dynamic_cast is casted, cloth will point to Clothing
+									if(cloth) { // Check if cast is successfull
 										if(!showDisp){
-											categoryDisp(); showDisp = true;
+											categoryDisp(); showDisp = true; // Displays the header once then sets showDisp to true so header is displayed only once
 										}
 									cloth->display();		        
-									hasCloth = true;
+									hasCloth = true; // Sets bool to true to mark that there is atleast 1 item
 									}
 									pass = true;
 							    }
 							    else if(categoryChoice == "electronics" || categoryChoice == "electronic"){
 							        Electronics* electronic = dynamic_cast<Electronics*>(shop);
-							        if(electronic) {
+							        if(electronic) { // Check if cast is successfull
 							        	if(!showDisp){
-											categoryDisp(); showDisp = true;
+											categoryDisp(); showDisp = true; // Displays the header once then sets showDisp to true so header is displayed only once
 										}
 									electronic->display();
-									hasElectronic = true;
+									hasElectronic = true; // Sets bool to true to mark that there is atleast 1 item
 									}
 									pass = true;
 							    }
 							    else if(categoryChoice == "entertainment"){
 							        Entertainment* entertainment = dynamic_cast<Entertainment*>(shop);
-									if(entertainment) {
+									if(entertainment) { // Check if cast is successfull
 										if(!showDisp){
-											categoryDisp(); showDisp = true;
+											categoryDisp(); showDisp = true; // Displays the header once then sets showDisp to true so header is displayed only once
 										}	
 									entertainment->display();		        
-									hasEntertainment = true;
+									hasEntertainment = true; // Sets bool to true to mark that there is atleast 1 item
 									}
 									pass = true;
 								}
 							
 							}
-					if(!hasCloth && categoryChoice == "clothing"){
+							cout<<"\n";
+					if(!hasCloth && categoryChoice == "clothing"){ // Displays if there is no item in clothing
 						cout << "There is no item available for clothing yet." << endl;
 					}
-					if(!hasElectronic && (categoryChoice == "electronics" || categoryChoice == "electronic")){
+					if(!hasElectronic && (categoryChoice == "electronics" || categoryChoice == "electronic")){ // Displays if there is no item in electronics
 						cout << "There is no item available for electronics yet." << endl;
 					}
-					if(!hasEntertainment && categoryChoice == "entertainment"){
+					if(!hasEntertainment && categoryChoice == "entertainment"){ // Displays if there is no item in entertainment
 						cout << "There is no item available for entertainment yet." << endl;
 					}
 				}
 				else{
-					cout<<"\nPlease choose one of the (3) category."<<endl;
+					cout<<"\nPlease choose one of the (3) category."<<endl; // Displays is user does not input one of the categories
 				}
 			}
 		}
@@ -718,21 +708,22 @@ void Menu(){
 		}
 		case 5:
 			if (shops.empty()) {
-			    cout << "There is no item available yet." << endl;
+			    cout << "There is no item available yet." << endl; // Displays if shops is empty
 			}
 			else {
 				cout << "\nDisplaying all items:" << endl;
 				tabs();
-			    for (auto& shop : shops) {
+			    for (auto& shop : shops) { // Iterates through shops to display items
 			        shop->display();
 			    }
+			    cout<<"\n";
 			}
 			break;
 		case 6:{
 		bool itemFound = false, proceed = false;
 		char ans;
 			if (shops.empty()) {
-			    cout << "There is no item to search for yet." << endl;
+			    cout << "There is no item to search for yet." << endl; // Displays if shops is empty
 			}
 			else {
 			    cout << "Enter the ID to search: ";
@@ -740,32 +731,19 @@ void Menu(){
 			    for (char& c : key) {
 				    c = toupper(c);
 				}
-				    for (auto& shop : shops) {
-				        if (shop->getID() == key) { 
-							cout << "\nDisplaying requested item:" << endl;
+
+				    for (auto& shop : shops) { // Loops through shops to find the same ID
+				        if (shop->getID() == key) {
+				        	if(!itemFound){ // Displays the tabs one time
+							cout << "\nDisplaying item/s with ID " << key << ": " << endl;
 							tabs();
-				            shop->display();
-				            
-				            proceed = false;
-					        while(!proceed){
-					            cout<<"\nIs this the correct item? (Y/N): ";
-						        cin>>ans;
-						    	cin.clear(); cin.ignore(numeric_limits<streamsize>::max(), '\n');
-						    	
-						    	if(ans == 'y' || ans == 'Y'){
-						            itemFound = true; proceed = true;
-						            cout<<"Item found! going back to menu..."<<endl;
-					        	}
-					        	else if(ans == 'n' || ans == 'N'){
-									proceed = true;
-								}
-								else{
-									cout<<"\nChoose either Y or N.";
-								}
 							}
+							itemFound = true;
+				            shop->display();
 				    	}	
 				    }
-					if (!itemFound){
+				    cout<<"\n";
+					if (!itemFound){ // Runs if item is not found
 					    	cout<<"Item not found! (Please check if ID is correct)."<<endl;
 					    	break;
 						}
@@ -774,16 +752,16 @@ void Menu(){
 		}
 		case 7:{
 			if (shops.empty()) {
-			    cout << "There is no item to sort yet." << endl;
+			    cout << "There is no item to sort yet." << endl; // Displays if shops is empty
 			}
 			else {
 				string sortCriteria;
 				bool entry = false;
 				
-				while(!entry){
+				while(!entry){ // Loops until validation is done
 	            cout << "\nSort by (quantity or price): ";
 	       		getline(cin, sortCriteria);
-	       		for (char& c : sortCriteria) {
+	       		for (char& c : sortCriteria) { // Makes sortCriteria case insensitive
 				    c = tolower(c);
 				}
 				if(sortCriteria == "quantity" || sortCriteria == "price"){
@@ -794,24 +772,25 @@ void Menu(){
 					entry = false;
 				}
 			}
-	            Shop::sortItems(shops, sortCriteria);
+	            Shop::sortItems(shops, sortCriteria); // Calls the static function sortItems without using an object instance
 	            cout << "\nItems sorted successfully by " << sortCriteria << "!" << endl;
 				cout << "\nDisplaying sorted items:" << endl;
 				tabs();
-				 for (auto& shop : shops) {
+				 for (auto& shop : shops) { // Displays all items in shops
 					shop->display();
 				 }
+				 cout<<"\n";
 			}
 			break;		
 		}
 		case 8:{
 			bool isLow = false, showDisp = false;
 			if (shops.empty()) {
-			    cout << "There is no items to display yet." << endl;
+			    cout << "There is no items to display yet." << endl; // Displays if shops is empty
 			}
 			else {
 				for(auto& shop : shops){
-					if(shop->getQuantity() <= 5){
+					if(shop->getQuantity() <= 5){ // Runs the code inside if qty of item is 5 or below
 						if(!showDisp){
 						cout<<"\nDisplaying Low Stock Items: "<<endl;
 						tabs(); showDisp = true;
@@ -820,7 +799,8 @@ void Menu(){
 						isLow = true;
 					}
 				}
-				if(!isLow){
+				cout<<"\n";
+				if(!isLow){ // Displays if isLow is not set to true by end of case
 					cout<<"There is no low stock items."<<endl;
 				}
 			}
@@ -828,19 +808,20 @@ void Menu(){
 		}
 		case 9:
 			cout<<"Terminating program...";
-			entry = false;
+			entry = false; // Exits loop
 			break;
 		default:
 			cout<<"\nInvalid Input. Please try again."<<endl;			
 		}
 	}
-	for(auto& shop : shops){
+	for(auto& shop : shops){ // Frees the memory
     	delete shop;
 	}
+	shops.clear();
 }
 int main(){
 		
-	Menu();
+	Menu(); // Calls Menu functions
 	
 	return 0;
 }
